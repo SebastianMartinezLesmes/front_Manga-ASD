@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
-
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import axios  from 'axios'
 
@@ -20,6 +18,7 @@ export class HomePage {
     private alertController: AlertController
   ){
     this.getUser();
+    this.getMangas();
     this.questInto();
   }
 
@@ -138,7 +137,7 @@ export class HomePage {
   login() {
     const inputUsername = this.email;
     const inputPassword = this.password;
-    const user = this.usuariosDB.find((u: any) => u.numeroTI === inputUsername && u.credenciales === inputPassword);
+    const user = this.usuariosDB.find((u: any) => u.email === inputUsername && u.password === inputPassword);
 
     if (this.email === '' || this.password === '') {
       // Al menos uno de los campos está vacío
@@ -160,15 +159,17 @@ export class HomePage {
     }
     else{
       this.cargo ='cliente';
-      this.ventana = '';
       this.presentAlert("usuario registrado", "ahora puedes alquilar tu manga");
       if (user) {
         console.log(user.email+' '+user.password)
-        //this.cargo = user.role
-        this.cargo ='cliente';
+        this.cargo = user.role;
+        this.ventana = '';
+        this.idU = user.id_usuario;
       } else { this.presentAlert("usuario inexistente", ""); }
     } this.limpiar();
   };
+  
+  idU: any = [];
 
   imageSrc: any;
   previewImage(event: any): void {
@@ -203,10 +204,20 @@ export class HomePage {
 
   usuariosDB: any = [];
   getUser() {
-    this.http.get('').subscribe(
+    this.http.get('http://localhost:8080/api/users/list').subscribe(
       (response) => {
         console.log('Respuesta del servidor:', response);
         this.usuariosDB = response;
+      },(error) => {console.error('Error al obtener datos del servidor:', error);}
+    )
+  };
+
+  mangasDB: any = [];
+  getMangas() {
+    this.http.get('http://localhost:8080/api/mangas/list').subscribe(
+      (response) => {
+        console.log('Respuesta del servidor:', response);
+        this.mangasDB = response;
       },(error) => {console.error('Error al obtener datos del servidor:', error);}
     )
   };

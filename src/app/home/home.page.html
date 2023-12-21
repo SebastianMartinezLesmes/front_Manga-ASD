@@ -28,7 +28,7 @@
       <div *ngIf="list === 'true'" class="list-container">
         <div id="experimental">
           <button (click)="mostrarCrearUsuario()" class="experimentalB"><b>Crear usuario</b></button>
-          <button (click)="mostrarregistro()" class="experimentalB"><b>Registrarse</b></button>
+          <button (click)="mostrarregistro()" class="experimentalB" *ngIf="cargo === 'visitante'"><b>Registrarse</b></button>
           <button (click)="mostrarManga()" class="experimentalB"><b>Mangas</b></button>
           <button (click)="mostrarMisMangas()" class="experimentalB" *ngIf="cargo !== 'visitante'"><b>mis Mangas</b></button>
           <button (click)="mostrarCrearManga()" class="experimentalB" *ngIf="cargo === 'cliente'"><b>Publicar manga</b></button>
@@ -40,32 +40,33 @@
 
 <ion-content [fullscreen]="true"><br>
 
-    <!-- cartas de los mangas -->
-    <div id="carrucel" *ngIf="ventana === ''">
-        <div id="cardP" *ngFor="let dat of number">
-        <p id="title"><b><i>Titulo</i></b></p>
-        <div id="pres">
-            <div  id="leter"><b>Precio:<br>$</b></div>
-            <img id="ima" src="https://wallpaperbat.com/img/46380-anime-hd-wallpaper-and-background-image.jpg" alt="">
-        </div>
-        <div  id="leter2"><b>Disponibles: #</b></div><br>
-        
-        <ion-col id="description">
-            <ion-row id="desc">
-                <div><b>Descripción:</b></div>
-                <div id="detalle_desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui esse quas neque debitis repudiandae unde earum, mollitia commodi consequatur at deserunt eveniet eum, laborum, amet distinctio et laudantium obcaecati iusto!</div>
-            </ion-row>
-            <ion-row>
-                <button id="buttonC" (click)="alquilar()">Alquilar</button>
-            </ion-row>
-        </ion-col>
+    <div>
+        <div id="carrucel" *ngIf="ventana === ''">
+            <div id="cardP" *ngFor="let dat of mangasDB">
+                <p id="title"><b><i>{{dat.title}}</i></b></p>
+                <div id="pres">
+                    <div id="leter"><b>Precio:<br>${{dat.price}}</b></div>
+                </div>
+                <img id="ima" src="https://wallpaperbat.com/img/46380-anime-hd-wallpaper-and-background-image.jpg" alt="">
+                <div id="leter2"><b>Disponibles: {{dat.amount}}</b></div><br>
+                <ion-col id="description">
+                    <ion-row id="desc">
+                        <div><b>Descripción:</b></div>
+                        <div id="detalle_desc">{{dat.description}}</div>
+                    </ion-row>
+                    <ion-row>
+                        <button id="buttonC" (click)="alquilar()">Alquilar</button>
+                    </ion-row>
+                </ion-col>
+            </div>
         </div>
     </div>
+    
 
     <!-- lista con mis mangas -->
     <ion-list *ngIf="ventana === 'mis_manga'">
-        <ion-item *ngFor="let dev of number">
-            <ion-label>titulo manga: {{dev.id}}</ion-label>
+        <ion-item *ngFor="let dev of usuariosDB">
+            <ion-label>titulo manga: {{dev.name}} rol: {{dev.role}}</ion-label>
             <button (click)="devolver(dev)">Devolver</button>
         </ion-item>
     </ion-list>
@@ -210,6 +211,6 @@
 <ion-footer>
     <ion-item id="cargo" lines="none" *ngIf="ventana === 'registro'">
       <p slot="start"><i>Cargo del usuario: </i></p>
-      <p slot="end"> {{ cargo }}</p>
+      <p slot="end"> {{ cargo }}, {{idU}}</p>
     </ion-item>
 </ion-footer>
