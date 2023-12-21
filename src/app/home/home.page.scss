@@ -7,28 +7,132 @@
     font-size: 20px;   
 }
 
-/*experimental*/
-#experimental{
-    text-align: center;
-    justify-content: center;
-    display: flex;
+ion-header{
+    background-color: rgba(33,37,41);
 }
-.experimentalB{
-    background-color: aqua;
-    color: black;
-    margin-left: 15px;
-    font-size: 20px;
-    height: 50px;
-    width: auto;
-    border-radius: 5px;
+/* Estilos generales */
+#experimental {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+
+    .experimentalB {
+        background-color: aqua;
+        color: black;
+        margin-left: 15px;
+        font-size: 20px;
+        height: 50px;
+        width: auto;
+        border-radius: 5px;
+
+        &:hover {
+        background-color: darkcyan;
+        /* Cambiar el color de fondo al pasar el ratón */
+        }
+
+        b {
+        /* Aplicar estilos al texto en negrita */
+        font-weight: bold;
+        }
+    }
+}
+
+/* Estilos de la barra de navegación */
+.navbar-dark {
+background-color: rgba(33,37,41); /* Cambiar el color de fondo */
+}
+
+/* Estilos para el formulario de búsqueda */
+.form-search {
+    .container-fluid {
+        a.navbar-brand {
+        color: aqua; /* Cambiar el color del enlace */
+        }
+
+        form.d-flex {
+        input.form-control {
+            margin-right: 5px; /* Espacio entre el campo de búsqueda y el botón */
+        }
+
+        button.btn {
+            background-color: aqua;
+            color: black;
+            border: none;
+            border-radius: 5px;
+
+            &:hover {
+            background-color: darkcyan;
+            /* Cambiar el color de fondo al pasar el ratón */
+            }
+        }
+        }
+    }
+}
+
+/* Estilos para la lista */
+.list-container {
+    background-color: rgba(33,37,41); /* Cambiar el color de fondo */
+    padding: 10px;
+
+    #experimental {
+        .experimentalB {
+            background-color: aqua;
+            color: black;
+            margin: 5px;
+            padding: 10px;
+            border-radius: 5px;
+
+            &:hover {
+                background-color: darkcyan;
+                /* Cambiar el color de fondo al pasar el ratón */
+            }
+
+            b {
+                /* Aplicar estilos al texto en negrita */
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+/* Estilos para la lista */
+.list-container {
+    background-color: rgba(33,37,41); /* Cambiar el color de fondo */
+    padding: 10px;
+
+    #experimental {
+        .experimentalB {
+            background-color: aqua;
+            color: black;
+            margin: 5px;
+            padding: 10px;
+            border-radius: 5px;
+
+            &:hover {
+                background-color: darkcyan;
+                /* Cambiar el color de fondo al pasar el ratón */
+            }
+
+            b {
+                /* Aplicar estilos al texto en negrita */
+                font-weight: bold;
+            }
+        }
+    }
 }
 
 /*diseño de la card*/
-#carrucel{
+#carrucel {
     width: auto;
-}
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}  
 
 #cardP{
+    margin-bottom: 20px;
     margin-left: 10px;
     border-radius: 5px;
     width: 20rem;

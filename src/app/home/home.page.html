@@ -1,37 +1,42 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-item id="cargo" lines="none">
-        <p slot="start"><i>Cargo: </i></p>
-        <p slot="end"> {{ cargo }}</p>
-    </ion-item>  
-    <nav class="navbar navbar-dark bg-dark">
+    <ion-toolbar>
+      <nav class="navbar navbar-dark bg-dark">
         <div class="container-fluid">
-            <button (click)="changeList()" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <nav class="navbar navbar-dark bg-dark" *ngIf="ventana === ''">
-                <div class="container-fluid">
-                    <a class="navbar-brand">Buscar por titulo</a>
-                    <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success">Search</button>
-                    </form>
-                </div>
-            </nav>
-        </div>
-    </nav>
-    <div *ngIf="list === 'true'">
-        <div class="bg-dark p-4">
-            <div id="experimental">
-                <button (click)="mostrarCrearManga()" class="experimentalB"><b>Publicar manga</b></button>
-                <button (click)="mostrarCrearUsuario()" class="experimentalB"><b>Crear usuario</b></button>
-                <button (click)="mostrarregistro()" class="experimentalB"><b>Registrarse</b></button>
-                <button (click)="mostrarManga()" class="experimentalB"><b>Mangas</b></button>
+          <button (click)="changeList()" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <nav class="navbar navbar-dark bg-dark" *ngIf="ventana === ''">
+            <div class="container-fluid">
+              <a class="navbar-brand">Buscar por título</a>
+              <form class="d-flex form-search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success">Search</button>
+              </form>
             </div>
+          </nav>
+          <nav class="navbar navbar-dark bg-dark" *ngIf="ventana === 'mis_manga'">
+            <div class="container-fluid">
+              <a class="navbar-brand">Buscar por título</a>
+              <form class="d-flex form-search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success">Search</button>
+              </form>
+            </div>
+          </nav>
         </div>
-    </div>
-  </ion-toolbar>
-</ion-header>
+      </nav>
+      <div *ngIf="list === 'true'" class="list-container">
+        <div id="experimental">
+          <button (click)="mostrarCrearUsuario()" class="experimentalB"><b>Crear usuario</b></button>
+          <button (click)="mostrarregistro()" class="experimentalB"><b>Registrarse</b></button>
+          <button (click)="mostrarManga()" class="experimentalB"><b>Mangas</b></button>
+          <button (click)="mostrarMisMangas()" class="experimentalB" *ngIf="cargo !== 'visitante'"><b>mis Mangas</b></button>
+          <button (click)="mostrarCrearManga()" class="experimentalB" *ngIf="cargo === 'cliente'"><b>Publicar manga</b></button>
+        </div>
+      </div>
+    </ion-toolbar>
+  </ion-header>
+  
 
 <ion-content [fullscreen]="true"><br>
 
@@ -51,11 +56,19 @@
                 <div id="detalle_desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui esse quas neque debitis repudiandae unde earum, mollitia commodi consequatur at deserunt eveniet eum, laborum, amet distinctio et laudantium obcaecati iusto!</div>
             </ion-row>
             <ion-row>
-                <button id="buttonC">Alquilar</button>
+                <button id="buttonC" (click)="alquilar()">Alquilar</button>
             </ion-row>
         </ion-col>
         </div>
     </div>
+
+    <!-- lista con mis mangas -->
+    <ion-list *ngIf="ventana === 'mis_manga'">
+        <ion-item *ngFor="let dev of number">
+            <ion-label>titulo manga: {{dev.id}}</ion-label>
+            <button (click)="devolver(dev)">Devolver</button>
+        </ion-item>
+    </ion-list>
 
     <!-- Formulario para registrarse -->
     <div id="espacio_registro" *ngIf="ventana === 'registro'">
@@ -187,8 +200,16 @@
         </form>    
     </div>
 
+    
 <!-- Bootstrap JS y Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
 </ion-content>
+
+<ion-footer>
+    <ion-item id="cargo" lines="none" *ngIf="ventana === 'registro'">
+      <p slot="start"><i>Cargo del usuario: </i></p>
+      <p slot="end"> {{ cargo }}</p>
+    </ion-item>
+</ion-footer>
