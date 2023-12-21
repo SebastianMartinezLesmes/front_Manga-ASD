@@ -111,18 +111,23 @@
     margin:  10px;
     padding: 5px;
     border-radius: 15px;
-    background-color: grey;
+    background-color: rgba(33,37,41);
 }
 #titulo_registro{
+    color: aqua;
     font-size: 30px;
     font-family: Arial, sans-serif
+}
+#button_registro{
+    background-color: aqua;
+    color: black;
 }
 
 /*formulario para publicar mangas*/
 #espacio_publicarManga{
     margin: 20px;
     border-radius: 15px;
-    background-color: blue;
+    background-color: rgba(33,37,41);
     padding-bottom: 20px;
     align-items: center;
     justify-content: center;
@@ -132,7 +137,7 @@
     display: flex;
     justify-content: center;
     font-size: 30px;
-    color: white;
+    color: aqua;
 }
 .grupo-inputs{
     align-items: center;
@@ -148,15 +153,27 @@
     flex: 1;
     padding-bottom: 12px;
 }
+#putFile_publicarManga { border-radius: 10px;}
+#imgFile_publicarManga{
+    ion-img{ border-radius: 30px;}
+}
+
 #cajaButton_publicarManga{
     display: flex;
     justify-content: center;
     color: white;
 }
 #button_publicarManga{
+    background-color: aqua;
+    color: rgba(33,37,41);
     width: 680px;
     height: 40px;
     font-size: 20px;
+    margin: 30px;
+
+    @media (max-width: 330px) {
+        width: 100%; 
+    }
 }
 
 /* formulario para crear usuario*/
@@ -165,16 +182,15 @@
     margin: auto;
 }
 
-/* Estilos para el formulario */
 #formulario_crearUsuario {
-    background-color: #ffffff;
+    --background: rgba(33,37,41);
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-#titulo_crearUsuario h3 {
-    color: #2327fcb9;
+#titulo_crearUsuario h3, div .col-form-label{
+    color: aqua;
     margin-bottom: 20px;
 }
 
@@ -192,16 +208,17 @@ label.col-form-label {
 
 #crearUsuario_button button {
     padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
+    background-color: aqua;
+    color: black;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 #crearUsuario_button button:hover {
     background-color: #0056b3;
+    color: white;
 }
 
 .mb-4 {

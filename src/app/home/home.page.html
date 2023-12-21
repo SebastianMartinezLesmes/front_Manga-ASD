@@ -35,27 +35,29 @@
 
 <ion-content [fullscreen]="true"><br>
 
-  <div id="carrucel" *ngIf="ventana === ''">
-    <div id="cardP" *ngFor="let dat of number">
-      <p id="title"><b><i>Titulo</i></b></p>
-      <div id="pres">
-          <div  id="leter"><b>Precio:<br>$</b></div>
-          <img id="ima" src="https://wallpaperbat.com/img/46380-anime-hd-wallpaper-and-background-image.jpg" alt="">
-      </div>
-      <div  id="leter2"><b>Disponibles: #</b></div><br>
-      
-      <ion-col id="description">
-          <ion-row id="desc">
-            <div><b>Descripción:</b></div>
-            <div id="detalle_desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui esse quas neque debitis repudiandae unde earum, mollitia commodi consequatur at deserunt eveniet eum, laborum, amet distinctio et laudantium obcaecati iusto!</div>
-          </ion-row>
-          <ion-row>
-              <button id="buttonC">Alquilar</button>
-          </ion-row>
-      </ion-col>
+    <!-- cartas de los mangas -->
+    <div id="carrucel" *ngIf="ventana === ''">
+        <div id="cardP" *ngFor="let dat of number">
+        <p id="title"><b><i>Titulo</i></b></p>
+        <div id="pres">
+            <div  id="leter"><b>Precio:<br>$</b></div>
+            <img id="ima" src="https://wallpaperbat.com/img/46380-anime-hd-wallpaper-and-background-image.jpg" alt="">
+        </div>
+        <div  id="leter2"><b>Disponibles: #</b></div><br>
+        
+        <ion-col id="description">
+            <ion-row id="desc">
+                <div><b>Descripción:</b></div>
+                <div id="detalle_desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui esse quas neque debitis repudiandae unde earum, mollitia commodi consequatur at deserunt eveniet eum, laborum, amet distinctio et laudantium obcaecati iusto!</div>
+            </ion-row>
+            <ion-row>
+                <button id="buttonC">Alquilar</button>
+            </ion-row>
+        </ion-col>
+        </div>
     </div>
-  </div>
 
+    <!-- Formulario para registrarse -->
     <div id="espacio_registro" *ngIf="ventana === 'registro'">
         <form class="row g-3" id="form_registro" (ngSubmit)="login()">
             <p id="titulo_registro"><b><i>Formulario de registro</i></b></p>
@@ -71,14 +73,15 @@
             </div>
             
             <div>
-                <button type="submit" class="btn btn-primary mb-3">Confirm identity</button>
+                <button type="submit" id="button_registro" class="btn btn-primary mb-3"><b>Confirm identity</b></button>
             </div>
         </form>
     </div>
 
+    <!-- Formulario para crear mangas -->
     <div id="espacio_publicarManga" *ngIf="ventana === 'crear_manga'">
         <div id="titulo_publicarManga">
-            <p>Formulario para publicar mangas</p>
+            <p>Publicar un manga</p>
         </div>
         <div class="container text-center">
             <div class="row">
@@ -109,81 +112,80 @@
                     </div>                    
                 </div>
                 <div class="col">
-                    
-                    <ion-item>
+                    <ion-item id="putFile_publicarManga">
                         <input type="file" (change)="previewImage($event)" accept="image/*">
                     </ion-item>
-            
-                    <div>
-                        <ion-img [src]="imageSrc" *ngIf="imageSrc" style="border-radius: 10px; max-width: 100%; height: 300px;"></ion-img>
+                    <div *ngIf="imageSrc" id="imgFile_publicarManga">
+                        <ion-img [src]="imageSrc" style="border-radius: 20px; max-width: 100%; height: 280px;"></ion-img>
                     </div>                  
                 </div>                
             </div>
         </div>
         <div id="cajaButton_publicarManga">
-            <button (click)="crearManga()" type="submit" class="btn btn-primary" id="button_publicarManga">Public</button>
+            <button (click)="crearManga()" type="submit" class="btn btn-primary" id="button_publicarManga"><b>Public</b></button>
         </div>
     </div>
 
-<div id="espacio_crearUsuario" *ngIf="ventana === 'crear_usuario'">
-    <form id="formulario_crearUsuario" class="bg-light p-5 rounded" [formGroup]="createForm" (ngSubmit)="crearUsuario()">
-        <div id="titulo_crearUsuario" class="mb-4 text-center">
-            <h3>Formulario para Crear Usuario</h3>
-        </div>
-        <div class="grupo-inputs mb-4">
-            <div class="row g-3 align-items-center">
-                <div class="col-md-4">
-                    <label for="nombreInput" class="col-form-label">Nombre</label>
-                </div>
-                <div class="col-md-auto">
-                    <input [(ngModel)]="name" type="text" class="form-control" placeholder="Ingrese su nombre">
-                </div>
-                <div class="col-md-4">
-                    <label class="col-form-label">Apellido</label>
-                </div>
-                <div class="col-md-auto">
-                    <input [(ngModel)]="lastName" type="text" class="form-control" placeholder="Ingrese su apellido">
+    <!-- Formulario para crear usuarios -->
+    <div id="espacio_crearUsuario" *ngIf="ventana === 'crear_usuario'">
+        <form id="formulario_crearUsuario" class="bg-dark p-5 rounded">
+            <div id="titulo_crearUsuario" class="mb-4 text-center">
+                <h3>Formulario para Crear Usuario</h3>
+            </div>
+            <div class="grupo-inputs mb-4">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-4">
+                        <label for="nombreInput" class="col-form-label">Nombre</label>
+                    </div>
+                    <div class="col-md-auto">
+                        <input [(ngModel)]="name" name="nombreInput" type="text" class="form-control" placeholder="Ingrese su nombre">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="apellidoInput" class="col-form-label">Apellido</label>
+                    </div>
+                    <div class="col-md-auto">
+                        <input [(ngModel)]="lastName" name="apellidoInput" type="text" class="form-control" placeholder="Ingrese su apellido">
+                    </div>
                 </div>
             </div>
-        </div>    
-        <div class="grupo-inputs mb-4">
-            <div class="row g-3 align-items-center">
-                <div class="col-md-4">
-                    <label for="emailInput" class="col-form-label">Email</label>
-                </div>
-                <div class="col-md-auto">
-                    <input [(ngModel)]="email" type="email" class="form-control" placeholder="name@example.com">
-                </div>
-                <div class="col-md-4">
-                    <label for="celularInput" class="col-form-label">Celular</label>
-                </div>
-                <div class="col-md-auto">
-                    <input [(ngModel)]="celular" type="text" class="form-control" placeholder="Ingrese su celular">
-                </div>
-            </div>
-        </div>
-        <div class="grupo-inputs mb-4">
-            <div class="row g-3 align-items-center">
-                <div class="col-md-4">
-                    <label for="usernameInput" class="col-form-label">Username</label>
-                </div>
-                <div class="col-md-auto">
-                    <input [(ngModel)]="otherName" type="text" class="form-control" placeholder="Elija nombre para su usuario">
-                </div>
-                <div class="col-md-4">
-                    <label for="passwordInput" class="col-form-label">Password</label>
-                </div>
-                <div class="col-md-auto">
-                    <input [(ngModel)]="password" type="password" class="form-control" placeholder="Elija una contraseña">
+            <div class="grupo-inputs mb-4">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-4">
+                        <label for="emailInput" class="col-form-label">Email</label>
+                    </div>
+                    <div class="col-md-auto">
+                        <input [(ngModel)]="email" name="emailInput" type="email" class="form-control" placeholder="name@example.com">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="celularInput" class="col-form-label">Celular</label>
+                    </div>
+                    <div class="col-md-auto">
+                        <input [(ngModel)]="celular" name="celularInput" type="text" class="form-control" placeholder="Ingrese su celular">
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Botón de envío -->
-        <div id="crearUsuario_button" class="text-center">
-            <button type="submit" class="btn btn-primary">Crear Usuario</button>
-        </div>
-    </form>
-</div>
+            <div class="grupo-inputs mb-4">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-4">
+                        <label for="usernameInput" class="col-form-label">Username</label>
+                    </div>
+                    <div class="col-md-auto">
+                        <input [(ngModel)]="otherName" name="usernameInput" type="text" class="form-control" placeholder="Elija nombre para su usuario">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="passwordInput" class="col-form-label">Password</label>
+                    </div>
+                    <div class="col-md-auto">
+                        <input [(ngModel)]="password" name="passwordInput" type="password" class="form-control" placeholder="Elija una contraseña">
+                    </div>
+                </div>
+            </div>
+            <!-- Botón de envío -->
+            <div id="crearUsuario_button" class="text-center">
+                <button type="submit" class="btn btn-primary" (click)="crearUsuario()"><b>Crear Usuario</b></button>
+            </div>
+        </form>    
+    </div>
 
 <!-- Bootstrap JS y Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
