@@ -1,0 +1,216 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400&display=swap');
+*{ font-family: 'Barlow', sans-serif;}
+/* texto del cargo cargo*/
+#cargo{
+    --background: rgba(33,37,41);
+    color: aqua;
+    font-size: 20px;   
+}
+
+/*experimental*/
+#experimental{
+    text-align: center;
+    justify-content: center;
+    display: flex;
+}
+.experimentalB{
+    background-color: aqua;
+    color: black;
+    margin-left: 15px;
+    font-size: 20px;
+    height: 50px;
+    width: auto;
+    border-radius: 5px;
+}
+
+/*diseño de la card*/
+#carrucel{
+    width: auto;
+}
+
+#cardP{
+    margin-left: 10px;
+    border-radius: 5px;
+    width: 20rem;
+    height: auto;
+    border: solid 2px black;
+    background-color: rgb(201, 189, 189); /* Color de fondo original */
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.3));
+}
+
+#title{
+    text-align: center;
+    align-items: center;
+    font-size: 20px;
+    margin-top: 8px;
+}
+
+#pres{
+    width: auto;
+    height: 200px;
+}
+#leter{
+    position: absolute;
+    z-index: 1;
+    color: white;
+}
+#leter2{
+    position: absolute;
+    z-index: 1;
+}
+
+#ima{
+    width: 100%;
+    height: 190px;
+}
+
+#description{
+    display: flex;
+    align-items: center;
+}
+#desc{
+    margin: 15px;
+}
+#detalle_desc{
+    height: 50px;
+    overflow-y: auto;
+}
+#buttonC {
+    margin: 10px 10px 20px;
+    background-color: aqua;  /* Color principal del botón */
+    color: black;  /* Color del texto */
+    height: 80px;
+    width: 80px;
+    border: solid white 2px;
+    border-radius: 50%;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);  /* Sombra sutil */
+    cursor: pointer;  /* Cambia el cursor a mano para indicar interacción */
+    outline: none;  /* Elimina el contorno al hacer clic */
+    transition: background-color 0.3s, color 1s, transform 0.3s, box-shadow 0.3s, border 1s;
+}
+
+#buttonC:hover {
+    background-color: rgb(46, 59, 175);  
+    color: white;
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);  /* Ajusta la sombra en el hover */
+    transform: scale(1.05);  /* Efecto de escala para dar profundidad */
+    border: solid black 2px;
+}
+
+/*formulario de registro*/
+#espacio_registro{
+    background-color: transparent;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+#form_registro{
+    justify-content: center;
+    width: 500px;
+    height: 350px;
+    margin:  10px;
+    padding: 5px;
+    border-radius: 15px;
+    background-color: grey;
+}
+#titulo_registro{
+    font-size: 30px;
+    font-family: Arial, sans-serif
+}
+
+/*formulario para publicar mangas*/
+#espacio_publicarManga{
+    margin: 20px;
+    border-radius: 15px;
+    background-color: blue;
+    padding-bottom: 20px;
+    align-items: center;
+    justify-content: center;
+}
+#titulo_publicarManga{
+    padding-top: 10px;
+    display: flex;
+    justify-content: center;
+    font-size: 30px;
+    color: white;
+}
+.grupo-inputs{
+    align-items: center;
+    text-align: center;
+}
+#campos1{
+    align-items: center;
+    text-align: center;
+    display: flex table-column;
+    margin: auto;
+}
+#campo_publicarManga{
+    flex: 1;
+    padding-bottom: 12px;
+}
+#cajaButton_publicarManga{
+    display: flex;
+    justify-content: center;
+    color: white;
+}
+#button_publicarManga{
+    width: 680px;
+    height: 40px;
+    font-size: 20px;
+}
+
+/* formulario para crear usuario*/
+.container {
+    max-width: 800px;
+    margin: auto;
+}
+
+/* Estilos para el formulario */
+#formulario_crearUsuario {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+#titulo_crearUsuario h3 {
+    color: #2327fcb9;
+    margin-bottom: 20px;
+}
+
+.grupo-inputs .row {
+    margin-bottom: 15px;
+}
+
+label.col-form-label {
+    font-weight: bold;
+}
+
+.form-control {
+    border-radius: 5px;
+}
+
+#crearUsuario_button button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#crearUsuario_button button:hover {
+    background-color: #0056b3;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+#espacio_crearUsuario {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
