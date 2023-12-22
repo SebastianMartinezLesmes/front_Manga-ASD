@@ -5,13 +5,14 @@
           <button (click)="changeList()" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
+          <a id="cargo2" *ngIf="ventana !== 'registro'">Eres: un {{ cargo }}</a>
           <nav class="navbar navbar-dark bg-dark" *ngIf="ventana === ''">
             <div class="container-fluid">
-              <a class="navbar-brand">Buscar por título</a>
-              <form class="d-flex form-search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success">Search</button>
-              </form>
+                <a class="navbar-brand">Buscar por título</a>
+                <form class="d-flex form-search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success">Search</button>
+                </form>
             </div>
           </nav>
           <nav class="navbar navbar-dark bg-dark" *ngIf="ventana === 'mis_manga'">
@@ -27,11 +28,11 @@
       </nav>
       <div *ngIf="list === 'true'" class="list-container">
         <div id="experimental">
-          <button (click)="mostrarCrearUsuario()" class="experimentalB"><b>Crear usuario</b></button>
-          <button (click)="mostrarregistro()" class="experimentalB" *ngIf="cargo === 'visitante'"><b>Registrarse</b></button>
-          <button (click)="mostrarManga()" class="experimentalB"><b>Mangas</b></button>
-          <button (click)="mostrarMisMangas()" class="experimentalB" *ngIf="cargo !== 'visitante'"><b>mis Mangas</b></button>
           <button (click)="mostrarCrearManga()" class="experimentalB" *ngIf="cargo === 'administrador'"><b>Publicar manga</b></button>
+          <button (click)="mostrarCrearUsuario()" class="experimentalB"><b>Crear usuario</b></button>
+          <button (click)="mostrarManga()" class="experimentalB"><b>lista Mangas</b></button>
+          <button (click)="mostrarMisMangas()" class="experimentalB" *ngIf="cargo !== 'visitante'"><b>Mangas alquilados</b></button>
+          <button (click)="mostrarregistro()" class="experimentalB" *ngIf="cargo === 'visitante'"><b>login</b></button>
         </div>
       </div>
     </ion-toolbar>
@@ -47,7 +48,7 @@
                 <div id="pres">
                     <div id="leter"><b>Precio:<br>${{dat.price}}</b></div>
                 </div>
-                <img id="ima" src="https://wallpaperbat.com/img/46380-anime-hd-wallpaper-and-background-image.jpg" alt="">
+                <img id="ima" src="../../assets/loli_policia.jpg" alt="Espere un momento">
                 <div id="leter2"><b>Disponibles: {{dat.amount}}</b></div><br>
                 <ion-col id="description">
                     <ion-row id="desc">
@@ -208,7 +209,7 @@
 
 <ion-footer>
     <ion-item id="cargo" lines="none" *ngIf="ventana === 'registro'">
-      <p slot="start"><i>Cargo del usuario: </i></p>
-      <p slot="end"> {{ cargo }}, {{idU}}</p>
+      <p slot="start"><i>Cargo del usuario: {{ cargo }}</i></p>
+      <p slot="end"><i *ngIf="idU !== 0">{{idU}} :Codigo  </i></p>
     </ion-item>
 </ion-footer>

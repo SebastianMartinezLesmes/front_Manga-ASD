@@ -106,7 +106,7 @@ export class HomePage {
         image: this.imageSrc,
       };
       /*aca el proceso para crear el manga*/
-      axios.post('', manga)
+      axios.post('', manga, { headers: this.requestHeaders })
       .then(response => {
         this.presentAlert ("Manga creado exitosamente", "");
         console.log('Respuesta del servidor:', response.data);
@@ -170,7 +170,7 @@ export class HomePage {
         username: this.otherName
       };
       /*aca va el metodo para crear usuarios*/
-      axios.post('', user)
+      axios.post('', user, { headers: this.requestHeaders })
       .then(response => {
         this.presentAlert ("Usuario creado exitosamente", "");
         console.log('Respuesta del servidor:', response.data);
@@ -225,12 +225,15 @@ export class HomePage {
       else { this.presentAlert("El campo "+ camposVacios, "Es requerido para ingresar a la paguina" );}
     }
     else{
+      this.idU = 1;
+      this.cargo = 'administrador';
       if (user) {
         console.log(user.email+' '+user.password)
         this.cargo = user.role;
         this.ventana = '';
         this.idU = user.id_usuario;
         this.getHistorialF();
+        this.getToken();
         this.presentAlert("usuario registrado", "ahora puedes alquilar tu manga");
       } else { this.presentAlert("usuario inexistente", ""); }
     } this.limpiar();
@@ -245,7 +248,22 @@ export class HomePage {
       };
       reader.readAsDataURL(file);
     }
+  };  
+
+  //aca recibe el token
+  token: any = [];
+  getToken() {
+    this.http.get('').subscribe(
+      (response) => {
+        console.log('Respuesta del servidor:', response);
+        this.mangasDB = response;
+      },(error) => {console.error('Error al obtener datos del servidor:', error);}
+    )
   };
+  requestHeaders = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${this.token}`
+  }; 
 
   //aca recibe los usuarios
   usuariosDB: any = [];
@@ -316,7 +334,7 @@ export class HomePage {
             this.presentAlert ("Manga alquilado", "Disfruta de tu manga y no se te olvide devolverlo.");
 
             /*metodo para enviar el id del manga*/
-            axios.post('', manga)
+            axios.post('', manga, { headers: this.requestHeaders })
             .then(response => {
               console.log('Respuesta del servidor:', response.data);
             })
@@ -335,7 +353,7 @@ export class HomePage {
     console.log(id_detail_ma+' '+this.idU);
 
     // Realiza la solicitud POST al servidor PHP
-    axios.post('', id_detail_ma)
+    axios.post('', id_detail_ma, { headers: this.requestHeaders })
     .then(response => {
       console.log('Respuesta del servidor:', response.data);
     })
