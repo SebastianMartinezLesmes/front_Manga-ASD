@@ -123,12 +123,9 @@ background-color: rgba(33,37,41); /* Cambiar el color de fondo */
 
 #carrucel {
     width: auto;
-    display: flex;
-    flex-direction: row;
     justify-content: center;
     align-items: center;
     text-align: center;
-    overflow: auto;
 }  
 
 #cardP {
@@ -204,6 +201,15 @@ background-color: rgba(33,37,41); /* Cambiar el color de fondo */
     box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
     transform: scale(1.05);
     border: solid black 2px;
+}
+/*estilo para lista de mis mangas*/
+#button_misMangas{
+    background-color: aqua;
+    color: rgba(33,37,41);
+    width: 40px;
+    height: auto;
+    font-size: 20px;
+    margin: 30px;
 }
 
 /*formulario de registro*/

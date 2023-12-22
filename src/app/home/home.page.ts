@@ -19,11 +19,14 @@ export class HomePage {
   ){
     this.getUser();
     this.getMangas();
+    this.getDetalles();
     this.questInto();
   }
 
   list:string = 'false';
   cargo: string = '';
+
+  idU: any = []; 
 
   name: string = '';
   lastName: string = '';
@@ -62,18 +65,63 @@ export class HomePage {
 
   questInto(){
     if(this.cargo === ''|| this.cargo === ' '){
-      this.cargo ='visitante'
+      this.cargo ='visitante';
     } 
   }
 
   crearManga(){
-    console.log(this.title+' '+this.description+' '+this.cant+' '+this.price)
-    console.log(this.imageSrc)
+    let camposVacios = '';
+    let cont = 0;
+  
+    if (this.title === '') {
+      camposVacios += 'Nombre del manga, ';
+      cont = cont + 1;
+    }
+    if (this.description === '') {
+      camposVacios += 'Descripción, ';
+      cont = cont + 1;
+    }
+    if (this.cant === 0) {
+      camposVacios += 'Cantidad, ';
+      cont = cont + 1;
+    }
+    if (this.price === '') {
+      camposVacios += 'Precio, ';
+      cont = cont + 1;
+    }
+    if (this.imageSrc === '') {
+      camposVacios += 'Imagen, ';
+      cont = cont + 1;
+    }  
+    camposVacios = camposVacios.slice(0, -2); // Eliminar la coma y el espacio al final
+    if (cont !== 0){ this.presentAlert("Los siguientes campos son requeridos para ingresar a la paguina",""+ camposVacios ); }
+    else { 
+      console.log(this.title+' '+this.description+' '+this.cant+' '+this.price)
+      console.log(this.imageSrc);
+      let manga = {
+        title: this.title,
+        description: this.description,
+        amount: this.cant,
+        price: this.price,
+        image: this.imageSrc,
+      };
+      /*aca el proceso para crear el manga*/
+      axios.post('', manga)
+      .then(response => {
+        this.presentAlert ("Manga creado exitosamente", "");
+        console.log('Respuesta del servidor:', response.data);
+      })
+      .catch(error => {
+        this.presentAlert ("Error al crear el manga", "");
+        console.error('Error al enviar el ID al servidor:', error);
+      });
+
+      this.getMangas();
+    }
     this.limpiar();
   };
 
   async crearUsuario(){
-    
     let camposVacios = '';
     let cont = 0;
   
@@ -113,8 +161,27 @@ export class HomePage {
         otherName: this.otherName = this.otherName,
         password: this.password = this.password,
       })
-      this.presentAlert("El campo "+ camposVacios, "Es requerido para ingresar a la paguina" 
-    );}
+      let user = {
+        name: this.name,
+        last_name: this.lastName,
+        email: this.email,
+        password: this.password,
+        phone: this.celular,
+        username: this.otherName
+      };
+      /*aca va el metodo para crear usuarios*/
+      axios.post('', user)
+      .then(response => {
+        this.presentAlert ("Usuario creado exitosamente", "");
+        console.log('Respuesta del servidor:', response.data);
+      })
+      .catch(error => {
+        this.presentAlert ("Error al crear el usuario", "");
+        console.error('Error al enviar el ID al servidor:', error);
+      });
+
+      this.getUser();
+    }
   };
 
   changeList() {
@@ -158,50 +225,29 @@ export class HomePage {
       else { this.presentAlert("El campo "+ camposVacios, "Es requerido para ingresar a la paguina" );}
     }
     else{
-      this.cargo ='cliente';
-      this.presentAlert("usuario registrado", "ahora puedes alquilar tu manga");
       if (user) {
         console.log(user.email+' '+user.password)
         this.cargo = user.role;
         this.ventana = '';
         this.idU = user.id_usuario;
+        this.getHistorialF();
+        this.presentAlert("usuario registrado", "ahora puedes alquilar tu manga");
       } else { this.presentAlert("usuario inexistente", ""); }
     } this.limpiar();
   };
-  
-  idU: any = [];
-
   imageSrc: any;
   previewImage(event: any): void {
     const file = event.target.files[0];
-
     if (file) {
       const reader = new FileReader();
-
       reader.onload = (e) => {
         this.imageSrc = e.target?.result;
       };
-
       reader.readAsDataURL(file);
     }
   };
 
-  async alquilar(){ const alert = await this.alertController.create({
-    header: '¿Está seguro de que desea alquilar este manga?',
-    message: 'Despues de alquilarlo tendras 15 dias para devolverlo.',
-    buttons: [
-      {
-        text: 'Cancelar',
-        cssClass: 'secondary',
-        handler: () => {}
-      },
-      {
-        text: 'Aceptar',
-        handler: () => { this.presentAlert ("Manga alquilado", "Disfruta de tu manga y no se te olvide devolverlo."); }
-      }], mode: 'ios'
-    });    await alert.present();
-  };
-
+  //aca recibe los usuarios
   usuariosDB: any = [];
   getUser() {
     this.http.get('http://localhost:8080/api/users/list').subscribe(
@@ -212,6 +258,7 @@ export class HomePage {
     )
   };
 
+  //aca recibe los mangas
   mangasDB: any = [];
   getMangas() {
     this.http.get('http://localhost:8080/api/mangas/list').subscribe(
@@ -222,17 +269,81 @@ export class HomePage {
     )
   };
 
-  devolver(dev:any){
+  //aca recibe los detalles del alquiler
+  detallesDB: any = [];
+  getDetalles() {
+    this.http.get('').subscribe(
+      (response) => {
+        console.log('Respuesta del servidor:', response);
+        this.detallesDB = response;
+      },(error) => {console.error('Error al obtener datos del servidor:', error);}
+    )
+  };
+  gHistorialDetalle: any = [];
+  getHistorialF() {
+    this.http.get('').subscribe(
+      (response) => {
+        console.log('Respuesta del servidor:', response);
+        this.detallesDB = response;
+        this.gHistorialDetalle = this.detallesDB.filter((u: any) => u.id_detail_ma === this.idU);
+      },(error) => {console.error('Error al obtener datos del servidor:', error);}
+    )
+  };
 
-    // Define los datos que deseas enviar al servidor
-    const data = {id: dev };
-    console.log(data.id);
+  /*funcion para alquilar un manga*/
+  async alquilar(dat: any){ const alert = await this.alertController.create({
+    header: '¿Está seguro de que desea alquilar este manga?',
+    message: 'Despues de alquilarlo tendras 15 dias para devolverlo.',
+    buttons: [
+      {
+        text: 'Cancelar',
+        cssClass: 'secondary',
+        handler: () => {}
+      },
+      {
+        text: 'Aceptar',
+        handler: () => {
+          if(this.cargo === 'visitante'){
+            this.presentAlert ("No puedes alquilar un manga", "Si no te has registrado, ve al boton de arriba y registrate"); 
+          }
+          else{ 
+            let manga = {
+              id_manga: dat.id_manga,
+              id_usuario: this.idU
+            }
+            console.log(manga.id_manga+' '+manga.id_usuario);
+            this.getMangas();
+            this.presentAlert ("Manga alquilado", "Disfruta de tu manga y no se te olvide devolverlo.");
+
+            /*metodo para enviar el id del manga*/
+            axios.post('', manga)
+            .then(response => {
+              console.log('Respuesta del servidor:', response.data);
+            })
+            .catch(error => {
+              console.error('Error al enviar el ID al servidor:', error);
+            });
+          } 
+        }
+      }], mode: 'ios'
+    });await alert.present();
+  };
+
+  /*aca esta la funcion para devolver manga*/
+  devolver(dev:any){
+    const id_detail_ma = dev.id_manga;
+    console.log(id_detail_ma+' '+this.idU);
 
     // Realiza la solicitud POST al servidor PHP
-    this.http.post('', data).subscribe(response => {
-      console.log('Respuesta del servidor:', response);
-    }, error => {
+    axios.post('', id_detail_ma)
+    .then(response => {
+      console.log('Respuesta del servidor:', response.data);
+    })
+    .catch(error => {
       console.error('Error al enviar el ID al servidor:', error);
     });
+
+    this.presentAlert ("Manga devuelto", "Gracias por devolver el manga");
+    this.getMangas();
   }
 }

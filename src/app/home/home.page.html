@@ -31,17 +31,17 @@
           <button (click)="mostrarregistro()" class="experimentalB" *ngIf="cargo === 'visitante'"><b>Registrarse</b></button>
           <button (click)="mostrarManga()" class="experimentalB"><b>Mangas</b></button>
           <button (click)="mostrarMisMangas()" class="experimentalB" *ngIf="cargo !== 'visitante'"><b>mis Mangas</b></button>
-          <button (click)="mostrarCrearManga()" class="experimentalB" *ngIf="cargo === 'cliente'"><b>Publicar manga</b></button>
+          <button (click)="mostrarCrearManga()" class="experimentalB" *ngIf="cargo === 'administrador'"><b>Publicar manga</b></button>
         </div>
       </div>
     </ion-toolbar>
   </ion-header>
-  
 
 <ion-content [fullscreen]="true"><br>
 
+    <!--cartas de los mangas-->
     <div>
-        <div id="carrucel" *ngIf="ventana === ''">
+        <div id="carrucel" *ngIf="ventana === ''" class="d-flex flex-nowrap">
             <div id="cardP" *ngFor="let dat of mangasDB">
                 <p id="title"><b><i>{{dat.title}}</i></b></p>
                 <div id="pres">
@@ -55,26 +55,25 @@
                         <div id="detalle_desc">{{dat.description}}</div>
                     </ion-row>
                     <ion-row>
-                        <button id="buttonC" (click)="alquilar()">Alquilar</button>
+                        <button id="buttonC" (click)="alquilar(dat)">Alquilar</button>
                     </ion-row>
                 </ion-col>
             </div>
         </div>
     </div>
     
-
     <!-- lista con mis mangas -->
     <ion-list *ngIf="ventana === 'mis_manga'">
-        <ion-item *ngFor="let dev of usuariosDB">
-            <ion-label>titulo manga: {{dev.name}} rol: {{dev.role}}</ion-label>
-            <button (click)="devolver(dev)">Devolver</button>
+        <ion-item *ngFor="let dev of gHistorialDetalle">
+            <ion-label>Titulo manga: {{dev.idMAngaFKName}} fecha_alquiler: {{dev.fecha_alquiler}}</ion-label>
+            <button id="button_misMangas" (click)="devolver(dev)">Devolver</button>
         </ion-item>
     </ion-list>
 
     <!-- Formulario para registrarse -->
     <div id="espacio_registro" *ngIf="ventana === 'registro'">
         <form class="row g-3" id="form_registro" (ngSubmit)="login()">
-            <p id="titulo_registro"><b><i>Formulario de registro</i></b></p>
+            <p id="titulo_registro"><b><i>Login</i></b></p>
             
             <div class="form-floating mb-3">
                 <input type="email" class="form-control" placeholder="name@example.com" [(ngModel)]="email" name="email">
@@ -201,7 +200,6 @@
         </form>    
     </div>
 
-    
 <!-- Bootstrap JS y Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
