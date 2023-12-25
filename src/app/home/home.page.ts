@@ -177,8 +177,6 @@ export class HomePage {
         this.presentAlert ("Error al crear el usuario", "");
         console.error('Error al enviar el ID al servidor:', error);
       });
-
-      this.getUser();
     }
   };
 
@@ -242,9 +240,12 @@ export class HomePage {
         this.idU = response.data[0];
         this.tokenKey = response.data[1];
         this.cargo = response.data[2];
+
+        console.log(this.requestHeaders)
       })
       .catch(error => {
         console.error('Error al enviar el ID al servidor:', error);
+        console.log(this.requestHeaders)
       });
 
       /*metodo para recibir token*/
@@ -296,9 +297,10 @@ export class HomePage {
       (response) => {
         console.log('Respuesta del servidor:', response);
         this.mangasDB = response;
-      },(error) => {console.error('Error al obtener datos del servidor:', error);}
+      },(error) => {console.error('Error al obtener los mangas del servidor:', error);}
     )
   };
+
 
   //aca recibe los detalles del alquiler
   detallesDB: any = [];

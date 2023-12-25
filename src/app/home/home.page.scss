@@ -64,12 +64,6 @@ background-color: rgba(33,37,41); /* Cambiar el color de fondo */
     height: 310px;
 }
 
-#descript {
-    margin: 15px;
-    width: 40px;
-    justify-content: center;
-    display: none;
-}
 #card{
     margin: 20px;
     border: solid black 1px;
@@ -81,6 +75,12 @@ background-color: rgba(33,37,41); /* Cambiar el color de fondo */
     }
 }
 
+#descript {
+    margin: 15px;
+    width: 40px;
+    justify-content: center;
+    display: none;
+}
 
 #detalle_desc {
     height: 50px;
@@ -91,9 +91,9 @@ background-color: rgba(33,37,41); /* Cambiar el color de fondo */
     margin: 10px 10px 20px;
     background-color: aqua;
     color: black;
-    height: 80px;
-    width: 80px;
-    border: solid white 2px;
+    height: 100px;
+    width: 180px;
+    border: solid black 2px;
     border-radius: 50%;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
     cursor: pointer;
@@ -106,7 +106,7 @@ background-color: rgba(33,37,41); /* Cambiar el color de fondo */
     color: white;
     box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
     transform: scale(1.05);
-    border: solid black 2px;
+    border: solid white 2px;
 }
 /*estilo para lista de mis mangas*/
 #button_misMangas{
