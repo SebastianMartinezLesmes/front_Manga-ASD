@@ -17,9 +17,7 @@ export class HomePage {
     private http:HttpClient, 
     private alertController: AlertController
   ){
-    this.getUser();
     this.getMangas();
-    this.getDetalles();
     this.questInto();
   }
 
@@ -36,7 +34,7 @@ export class HomePage {
   password: string = '';  
 
   ventana: string = '';
-  number: any = [{id: 1},{id: 2},{id: 3},{id: 4}];
+  number: any = [{id: 1},{id: 2},{id: 3},{id: 4},{id: 5},{id: 6},{id: 7},{id: 8},{id: 9},{id: 10}];
 
   title: string = '';
   description: string = '';
@@ -106,7 +104,7 @@ export class HomePage {
         image: this.imageSrc,
       };
       /*aca el proceso para crear el manga*/
-      axios.post('', manga, { headers: this.requestHeaders })
+      axios.post('http://localhost:8080/api/mangas/add', manga, { headers: this.requestHeaders })
       .then(response => {
         this.presentAlert ("Manga creado exitosamente", "");
         console.log('Respuesta del servidor:', response.data);
@@ -170,7 +168,7 @@ export class HomePage {
         username: this.otherName
       };
       /*aca va el metodo para crear usuarios*/
-      axios.post('', user, { headers: this.requestHeaders })
+      axios.post('http://localhost:8080/api/users/add', user, { headers: this.requestHeaders })
       .then(response => {
         this.presentAlert ("Usuario creado exitosamente", "");
         console.log('Respuesta del servidor:', response.data);
@@ -201,9 +199,13 @@ export class HomePage {
     await alert.present();
   }
   
+  /*proceso de login */
   login() {
     const inputUsername = this.email;
     const inputPassword = this.password;
+
+    /* aca se encripta la contraseña y se compara */
+
     const user = this.usuariosDB.find((u: any) => u.email === inputUsername && u.password === inputPassword);
 
     if (this.email === '' || this.password === '') {
@@ -225,19 +227,36 @@ export class HomePage {
       else { this.presentAlert("El campo "+ camposVacios, "Es requerido para ingresar a la paguina" );}
     }
     else{
-      this.idU = 1;
-      this.cargo = 'administrador';
-      if (user) {
-        console.log(user.email+' '+user.password)
-        this.cargo = user.role;
+
+      let credenciales = {
+        email: this.email,
+        password: this.password
+      }
+
+      /*metodo para enviar credenciales*/
+      axios.post('http://localhost:8080/api/users/login', credenciales)
+      .then(response => {
+        console.log('Respuesta del servidor:', response.data);
+        this.token = response;
+
+        this.idU = response.data[0];
+        this.tokenKey = response.data[1];
+        this.cargo = response.data[2];
+      })
+      .catch(error => {
+        console.error('Error al enviar el ID al servidor:', error);
+      });
+
+      /*metodo para recibir token*/
+      console.log(this.token);
+      if (this.tokenKey != null) {
         this.ventana = '';
-        this.idU = user.id_usuario;
         this.getHistorialF();
-        this.getToken();
         this.presentAlert("usuario registrado", "ahora puedes alquilar tu manga");
       } else { this.presentAlert("usuario inexistente", ""); }
     } this.limpiar();
   };
+
   imageSrc: any;
   previewImage(event: any): void {
     const file = event.target.files[0];
@@ -252,23 +271,17 @@ export class HomePage {
 
   //aca recibe el token
   token: any = [];
-  getToken() {
-    this.http.get('').subscribe(
-      (response) => {
-        console.log('Respuesta del servidor:', response);
-        this.mangasDB = response;
-      },(error) => {console.error('Error al obtener datos del servidor:', error);}
-    )
-  };
+  tokenKey: any = [];
+
   requestHeaders = {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${this.token}`
+    'Authorization': `Bearer ${this.tokenKey}`
   }; 
 
   //aca recibe los usuarios
   usuariosDB: any = [];
   getUser() {
-    this.http.get('http://localhost:8080/api/users/list').subscribe(
+    this.http.get('http://localhost:8080/api/users/list', { headers: this.requestHeaders }).subscribe(
       (response) => {
         console.log('Respuesta del servidor:', response);
         this.usuariosDB = response;
@@ -289,17 +302,9 @@ export class HomePage {
 
   //aca recibe los detalles del alquiler
   detallesDB: any = [];
-  getDetalles() {
-    this.http.get('').subscribe(
-      (response) => {
-        console.log('Respuesta del servidor:', response);
-        this.detallesDB = response;
-      },(error) => {console.error('Error al obtener datos del servidor:', error);}
-    )
-  };
   gHistorialDetalle: any = [];
   getHistorialF() {
-    this.http.get('').subscribe(
+    this.http.get('http://localhost:8080/api/details/list', { headers: this.requestHeaders }).subscribe(
       (response) => {
         console.log('Respuesta del servidor:', response);
         this.detallesDB = response;
@@ -326,21 +331,21 @@ export class HomePage {
           }
           else{ 
             let manga = {
-              id_manga: dat.id_manga,
-              id_usuario: this.idU
+              idMangaFK: dat.idManga,
+              idUserFK: this.idU,
             }
-            console.log(manga.id_manga+' '+manga.id_usuario);
-            this.getMangas();
+            console.log(manga.idMangaFK+' '+manga.idUserFK);
             this.presentAlert ("Manga alquilado", "Disfruta de tu manga y no se te olvide devolverlo.");
 
             /*metodo para enviar el id del manga*/
-            axios.post('', manga, { headers: this.requestHeaders })
+            axios.post('http://localhost:8080/api/details/add', manga, { headers: this.requestHeaders })
             .then(response => {
               console.log('Respuesta del servidor:', response.data);
             })
             .catch(error => {
               console.error('Error al enviar el ID al servidor:', error);
             });
+            this.getMangas();
           } 
         }
       }], mode: 'ios'
@@ -353,7 +358,7 @@ export class HomePage {
     console.log(id_detail_ma+' '+this.idU);
 
     // Realiza la solicitud POST al servidor PHP
-    axios.post('', id_detail_ma, { headers: this.requestHeaders })
+    axios.put(`http://localhost:8080/api/details/${id_detail_ma}`, { headers: this.requestHeaders })
     .then(response => {
       console.log('Respuesta del servidor:', response.data);
     })
