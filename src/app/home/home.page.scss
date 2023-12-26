@@ -54,60 +54,67 @@ background-color: rgba(33,37,41); /* Cambiar el color de fondo */
     padding: 10px;
 }
 
-/*estilos de la carta*/
-#content_card{
-    display: flex;
-    justify-content: center;
+// estilos para las card's
+#content_card {
+    position: relative;
 }
+
+#title {
+    z-index: 2;
+    top: 0;
+    left: 0;
+    background-color: white; /* Fondo blanco para que sea legible sobre la imagen */
+    padding: 5px;
+}
+
+#ima-container {
+    position: relative;
+}
+
 #ima {
-    width: 400px;
-    height: 310px;
+    width: 100%;
+    height: auto;
 }
 
-#card{
-    margin: 20px;
-    border: solid black 1px;
-}
-
-#card :hover{ 
-    #descript {
-    display: block;
-    }
-}
-
-#descript {
-    margin: 15px;
-    width: 40px;
-    justify-content: center;
-    display: none;
-}
-
-#detalle_desc {
-    height: 50px;
-    overflow-y: auto;
+#leter2 {
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    left: 0;
+    background-color: white; /* Fondo blanco para que sea legible sobre la imagen */
+    padding: 5px;
 }
 
 #buttonC {
-    margin: 10px 10px 20px;
+    z-index: 4;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 10px;
     background-color: aqua;
     color: black;
-    height: 100px;
-    width: 180px;
-    border: solid black 2px;
-    border-radius: 50%;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    outline: none;
-    transition: background-color 0.3s, color 1s, transform 0.3s, box-shadow 0.3s, border 1s;
+    height: 80px;
+    width: 120px;
+    border-radius: 10px;
+    transition: background-color 0.3s, color 1s, transform 0.3s, border 1s;
 }
 
-#buttonC:hover {
-    background-color: rgb(46, 59, 175);
-    color: white;
-    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
-    transform: scale(1.05);
-    border: solid white 2px;
+#descript {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: white; /* Fondo blanco para que sea legible sobre la imagen */
+    padding: 10px;
+    display: none;
 }
+
+#content_card:hover #descript {
+    display: block;
+}
+
+
 /*estilo para lista de mis mangas*/
 #button_misMangas{
     background-color: aqua;

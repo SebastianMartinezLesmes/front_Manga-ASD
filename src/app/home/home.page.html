@@ -42,32 +42,35 @@
 
     <!--cartas de los mangas  *ngFor="let dat of number" -->
     
-        <ion-grid *ngIf="ventana === ''">
-            <ion-row id="content_card">
-              <ion-card id="card" *ngFor="let dat of mangasDB">
+    <ion-grid *ngIf="ventana === ''">
+        <ion-row id="content_card">
+            <ion-card id="card" *ngFor="let dat of mangasDB">
                 <ion-row>
-
-                    <ion-col>
-                        <p id="title"><b><i>{{dat.title}}</i></b></p>
-                        <div>
-                            <h5><b>Precio:<br>${{dat.price}}</b></h5>
-                        </div>
-                        <img id="ima" src="../../assets/loli_policia.jpg" alt="Espere un momento">
-                        <h3 id="leter2"><b>Disponibles: {{dat.amount}}</b></h3><br>
-                        
-                        <button id="buttonC" (click)="alquilar(dat)"><h3><b>Alquilar</b></h3></button>
-                        
-                    </ion-col>
     
-                    <ion-col id="descript">
-                        <h5><b>Descripción:</b></h5>
-                        <h6>{{dat.description}}</h6>
+                    <ion-col id="content_card">
+                        <ion-item lines="none">
+                            <h2 id="title" slot="start"><b><i>{{dat.title}}</i></b></h2>
+                            <h5 slot="end"><b>Precio:<br>${{dat.price}}</b></h5>
+                        </ion-item>
+                        <div id="ima-container">
+                            <img id="ima" src="../../assets/loli_policia.jpg" alt="Espere un momento">
+                        </div>
+                        <ion-item lines='none'>
+                            <h3 slot="start" id="leter2"><b>Disponibles: {{dat.amount}}</b></h3><br>
+                            <button slot="end" id="buttonC" (click)="alquilar(dat)" expand="full"><h3><b>Alquilar</b></h3></button>
+                        </ion-item>
+                        <div id="descript">
+                            <h5><b>Descripción:</b></h5>
+                            <h6>{{dat.description}}</h6>
+                        </div>
                     </ion-col>
-
+                    
+    
                 </ion-row>
-              </ion-card>
-            </ion-row>
-        </ion-grid>
+            </ion-card>
+        </ion-row>
+    </ion-grid>
+    
 
     <!-- lista con mis mangas  *ngFor="let dev of gHistorialDetalle"-->
     <ion-list *ngIf="ventana === 'mis_manga'">
