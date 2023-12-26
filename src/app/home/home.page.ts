@@ -14,7 +14,7 @@ export class HomePage {
 
   constructor(
     private router: Router, 
-    private http:HttpClient, 
+    private http: HttpClient, 
     private alertController: AlertController
   ){
     this.getMangas();
@@ -201,11 +201,7 @@ export class HomePage {
   login() {
     const inputUsername = this.email;
     const inputPassword = this.password;
-
-    /* aca se encripta la contraseña y se compara */
-
-    const user = this.usuariosDB.find((u: any) => u.email === inputUsername && u.password === inputPassword);
-
+    
     if (this.email === '' || this.password === '') {
       // Al menos uno de los campos está vacío
       let camposVacios = '';
@@ -244,13 +240,13 @@ export class HomePage {
         console.log(this.requestHeaders)
       })
       .catch(error => {
-        console.error('Error al enviar el ID al servidor:', error);
+        console.error('Error al enviar datos al servidor:', error);
         console.log(this.requestHeaders)
       });
 
       /*metodo para recibir token*/
       console.log(this.token);
-      if (this.tokenKey != null) {
+      if (this.token.length > 0) {
         this.ventana = '';
         this.getHistorialF();
         this.presentAlert("usuario registrado", "ahora puedes alquilar tu manga");
@@ -278,17 +274,6 @@ export class HomePage {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${this.tokenKey}`
   }; 
-
-  //aca recibe los usuarios
-  usuariosDB: any = [];
-  getUser() {
-    this.http.get('http://localhost:8080/api/users/list', { headers: this.requestHeaders }).subscribe(
-      (response) => {
-        console.log('Respuesta del servidor:', response);
-        this.usuariosDB = response;
-      },(error) => {console.error('Error al obtener datos del servidor:', error);}
-    )
-  };
 
   //aca recibe los mangas
   mangasDB: any = [];
@@ -337,15 +322,16 @@ export class HomePage {
               idUserFK: this.idU,
             }
             console.log(manga.idMangaFK+' '+manga.idUserFK);
-            this.presentAlert ("Manga alquilado", "Disfruta de tu manga y no se te olvide devolverlo.");
 
             /*metodo para enviar el id del manga*/
             axios.post('http://localhost:8080/api/details/add', manga, { headers: this.requestHeaders })
             .then(response => {
               console.log('Respuesta del servidor:', response.data);
+              this.presentAlert ("Manga alquilado", "Disfruta de tu manga y no se te olvide devolverlo.");
             })
             .catch(error => {
               console.error('Error al enviar el ID al servidor:', error);
+              this.presentAlert ("Error al alquilar el manga", "TRabajamos para solucionarlo.");
             });
             this.getMangas();
           } 
