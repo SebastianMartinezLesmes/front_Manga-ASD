@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
@@ -34,7 +34,17 @@ export class HomePage {
   password: string = '';  
 
   ventana: string = '';
-  number: any = [{id: 1},{id: 2},{id: 3},{id: 4},{id: 5},{id: 6},{id: 7},{id: 8},{id: 9},{id: 10}];
+  number: any = [
+    {id: 1, idMAngaFKName: 1, fecha_alquiler: 'fecha 1'},
+    {id: 2, idMAngaFKName: 2, fecha_alquiler: 'fecha 2'},
+    {id: 3, idMAngaFKName: 3, fecha_alquiler: 'fecha 3'},
+    {id: 4, idMAngaFKName: 4, fecha_alquiler: 'fecha 4'},
+    {id: 5, idMAngaFKName: 5, fecha_alquiler: 'fecha 5'},
+    {id: 6, idMAngaFKName: 6, fecha_alquiler: 'fecha 6'},
+    {id: 7, idMAngaFKName: 7, fecha_alquiler: 'fecha 7'},
+    {id: 8, idMAngaFKName: 8, fecha_alquiler: 'fecha 8'},
+    {id: 9, idMAngaFKName: 9, fecha_alquiler: 'fecha 9'},
+  ];
 
   title: string = '';
   description: string = '';
@@ -237,20 +247,24 @@ export class HomePage {
         this.tokenKey = response.data[1];
         this.cargo = response.data[2];
 
-        console.log(this.requestHeaders)
-      })
-      .catch(error => {
-        console.error('Error al enviar datos al servidor:', error);
-        console.log(this.requestHeaders)
-      });
-
-      /*metodo para recibir token*/
-      console.log(this.token);
-      if (this.token.length > 0) {
         this.ventana = '';
         this.getHistorialF();
         this.presentAlert("usuario registrado", "ahora puedes alquilar tu manga");
-      } else { this.presentAlert("usuario inexistente", ""); }
+
+        //requestHeaders
+        console.log(this.requestHeaders);
+        console.log('aca esta el token: '+this.tokenKey);
+
+      })
+      .catch(error => {
+        console.error('Error al enviar datos al servidor:', error);
+        console.log(this.requestHeaders);
+        this.presentAlert("usuario inexistente", "");
+      });
+
+      /*metodo para recibir token*/
+      console.log('Esto es lo que resive el token: '+this.token);
+      
     } this.limpiar();
   };
 
@@ -268,12 +282,12 @@ export class HomePage {
 
   //aca recibe el token
   token: any = [];
-  tokenKey: any = [];
+  tokenKey: any = '';
 
-  requestHeaders = {
+  requestHeaders: HttpHeaders = new HttpHeaders({
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${this.tokenKey}`
-  }; 
+  });
 
   //aca recibe los mangas
   mangasDB: any = [];
@@ -296,7 +310,7 @@ export class HomePage {
         console.log('Respuesta del servidor:', response);
         this.detallesDB = response;
         this.gHistorialDetalle = this.detallesDB.filter((u: any) => u.id_detail_ma === this.idU);
-      },(error) => {console.error('Error al obtener datos del servidor:', error);}
+      },(error) => {console.error('Error al obtener los detalles de los mangas del servidor:', error);}
     )
   };
 
@@ -342,10 +356,10 @@ export class HomePage {
 
   /*aca esta la funcion para devolver manga*/
   devolver(dev:any){
-    const id_detail_ma = dev.id_manga;
+    let id_detail_ma = dev.id_manga;
     console.log(id_detail_ma+' '+this.idU);
 
-    // Realiza la solicitud POST al servidor PHP
+    // Realiza la solicitud PUT al servidor PHP
     axios.put(`http://localhost:8080/api/details/${id_detail_ma}`, { headers: this.requestHeaders })
     .then(response => {
       console.log('Respuesta del servidor:', response.data);

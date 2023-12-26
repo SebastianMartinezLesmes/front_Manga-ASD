@@ -69,10 +69,11 @@
             </ion-row>
         </ion-grid>
 
-    <!-- lista con mis mangas -->
+    <!-- lista con mis mangas  *ngFor="let dev of gHistorialDetalle"-->
     <ion-list *ngIf="ventana === 'mis_manga'">
-        <ion-item *ngFor="let dev of gHistorialDetalle">
-            <ion-label>Titulo manga: {{dev.idMAngaFKName}} fecha_alquiler: {{dev.fecha_alquiler}}</ion-label>
+        <ion-item *ngFor="let dev of number">
+            <ion-label>Titulo manga: {{dev.idMAngaFKName}}</ion-label>
+            <ion-label>Fecha_alquiler: {{dev.fecha_alquiler}}</ion-label>
             <button id="button_misMangas" (click)="devolver(dev)">Devolver</button>
         </ion-item>
     </ion-list>
