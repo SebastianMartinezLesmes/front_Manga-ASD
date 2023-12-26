@@ -40,11 +40,11 @@
 
 <ion-content [fullscreen]="true"><br>
 
-    <!--cartas de los mangas  *ngFor="let dat of mangasDB" -->
+    <!--cartas de los mangas  *ngFor="let dat of number" -->
     
         <ion-grid *ngIf="ventana === ''">
             <ion-row id="content_card">
-              <ion-card id="card" *ngFor="let dat of number">
+              <ion-card id="card" *ngFor="let dat of mangasDB">
                 <ion-row>
 
                     <ion-col>
@@ -71,9 +71,11 @@
 
     <!-- lista con mis mangas  *ngFor="let dev of gHistorialDetalle"-->
     <ion-list *ngIf="ventana === 'mis_manga'">
-        <ion-item *ngFor="let dev of number">
-            <ion-label>Titulo manga: {{dev.idMAngaFKName}}</ion-label>
-            <ion-label>Fecha_alquiler: {{dev.fecha_alquiler}}</ion-label>
+        <!-- *ngFor="let dev of detallesDB" -->
+        <ion-item *ngFor="let dev of gHistorialDetalle">
+            <ion-label>{{dev.idDetail_ma}}</ion-label>
+            <ion-label>Titulo manga: {{dev.idMangaFKName}}</ion-label>
+            <ion-label>Fecha_alquiler: {{dev.fechaAlquiler}}</ion-label>
             <button id="button_misMangas" (click)="devolver(dev)">Devolver</button>
         </ion-item>
     </ion-list>
