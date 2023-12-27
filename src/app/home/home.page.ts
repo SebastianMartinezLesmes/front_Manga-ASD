@@ -105,17 +105,19 @@ export class HomePage {
     if (cont !== 0) { this.presentAlert("Los siguientes campos son requeridos para ingresar a la paguina", "" + camposVacios); }
     else {
       console.log(this.title + ' ' + this.description + ' ' + this.cant + ' ' + this.price)
-      console.log(this.ima);
-      let manga = {
-        title: this.title,
-        description: this.description,
-        amount: this.cant,
-        price: this.price,
-        file: this.ima,
-      };
+      console.log('\nima:'+this.ima+ '\n'+this.ima);
 
-      /*aca la funcion para crear el manga*/
-      axios.post('http://localhost:8080/api/mangas/add', manga, {
+      let mangaFormData = new FormData();
+      mangaFormData.append('title', this.title);
+      mangaFormData.append('description', this.description);
+      mangaFormData.append('amount', this.cant.toString());
+      mangaFormData.append('price', this.price.toString());
+      mangaFormData.append('file', this.ima);  // Asegúrate de que this.ima sea un File
+
+      console.log(mangaFormData);
+
+      /* Aquí la función para crear el manga */
+      axios.post('http://localhost:8080/api/mangas/add', mangaFormData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${this.tokenKey}`
