@@ -359,14 +359,15 @@ export class HomePage {
             
               // Construye la fecha en el formato "A/M/D"
               let fecha = `${year}-${month}-${day}`;
+              let fecha_devolucion = `${year}-${month}-${day+15}`;
 
               let manga = {
-                fecha_alquiler: fecha,
-                fecha_devolucion: null,
-                id_MangaFK: dat.idManga,
-                id_UserFK: this.idU,
+                fechaAlquiler: fecha,
+                fechaDevolucion: fecha_devolucion,
+                idMangaFK:{ idManga: dat.idManga},
+                idUserFK:{ idUsuario:this.idU }
               }
-              console.log('datos: \n'+manga.fecha_alquiler+'\n'+manga.fecha_devolucion+'\n'+manga.id_MangaFK+'\n'+manga.id_UserFK);
+              console.log('datos: \n'+manga.fechaAlquiler+'\n'+manga.fechaDevolucion+'\n'+manga.idMangaFK.idManga+'\n'+manga.idUserFK.idUsuario);
 
               /*metodo para enviar el id del manga y del usuario*/
               axios.post('http://localhost:8080/api/details/add', manga, { headers: { 'Content-Type': 'application/json' }})
@@ -390,17 +391,8 @@ export class HomePage {
   devolver(dev: any) {
     let idDetail_ma = dev.idDetail_ma;
   
-    // Obtiene los componentes de la fecha
-    let fecha_actual = new Date();
-    let year = fecha_actual.getFullYear();
-    let month = (fecha_actual.getMonth() + 1).toString().padStart(2, '0');
-    let day = fecha_actual.getDate().toString().padStart(2, '0');
-  
-    // Construye la fecha en el formato "A/M/D"
-    let fecha_devolucion = `${year}-${month}-${day}`;
-  
     // Realiza la solicitud PUT al servidor PHP
-    axios.put(`http://localhost:8080/api/details/${idDetail_ma}`, { fecha_devolucion })
+    axios.put(`http://localhost:8080/api/details/${idDetail_ma}`, {restore: true })
     .then(response => {
       console.log(idDetail_ma +' '+ this.idU);
       this.presentAlert("Manga devuelto", "Gracias por devolver el manga");
@@ -413,5 +405,24 @@ export class HomePage {
   
     this.getHistorialF();
     this.getMangas();
+  }
+
+  datsDetalle: any = [];
+  detalle(dat:any){
+    this.ventana = 'Detalle_card';
+
+    const detalleObject = {
+      title: dat.title,
+      description: dat.description,
+      img: dat.image,
+      price: dat.price,
+      amount: dat.amount
+    };
+    console.log(detalleObject)
+    this.datsDetalle.push(detalleObject);
+  }
+  back(){
+    this.datsDetalle.splice(0, this.datsDetalle.length);
+    this.ventana = '';
   }
 }

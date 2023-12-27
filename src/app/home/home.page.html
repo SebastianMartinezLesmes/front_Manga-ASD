@@ -5,25 +5,9 @@
           <button (click)="changeList()" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <a id="cargo2" *ngIf="ventana !== 'registro'">Eres: un {{ cargo }}</a>
-          <nav class="navbar navbar-dark bg-dark" *ngIf="ventana === ''">
-            <div class="container-fluid">
-                <a class="navbar-brand">Buscar por título</a>
-                <form class="d-flex form-search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success">Search</button>
-                </form>
-            </div>
-          </nav>
-          <nav class="navbar navbar-dark bg-dark" *ngIf="ventana === 'mis_manga'">
-            <div class="container-fluid">
-              <a class="navbar-brand">Buscar por título</a>
-              <form class="d-flex form-search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success">Search</button>
-              </form>
-            </div>
-          </nav>
+          <ion-avatar>
+            <ion-img src="../../assets/logo.png"></ion-img>
+          </ion-avatar>
         </div>
       </nav>
       <div *ngIf="list === 'true'" class="list-container">
@@ -50,38 +34,60 @@
                     <ion-col id="content_card">
                         <ion-item lines="none">
                             <h2 id="title" slot="start"><b><i>{{dat.title}}</i></b></h2>
-                            <h5 slot="end"><b>Precio:<br>${{dat.price}}</b></h5>
                         </ion-item>
-                        <div id="ima-container">
-                            <img id="ima" src="../../assets/loli_policia.jpg" alt="Espere un momento">
-                        </div>
+                        <div id="ima_container">
+                            <img *ngIf="dat.image !== null" id="ima" src="http://localhost:8080/api/mangas/image/{{dat.image}}" alt="No funciona">
+                            <img *ngIf="dat.image === null || dat.image.trim() === ''" src="../../assets/sin_foto.gif">
+                        </div><br><br>
                         <ion-item lines='none'>
-                            <h3 slot="start" id="leter2"><b>Disponibles: {{dat.amount}}</b></h3><br>
-                            <button slot="end" id="buttonC" (click)="alquilar(dat)" expand="full"><h3><b>Alquilar</b></h3></button>
+                            <button slot="start" id="buttonC" (click)="detalle(dat)" expand="full"><h4><b>Detalle</b></h4></button>
+                            <button slot="end" id="buttonC" (click)="alquilar(dat)" expand="full"><h4><b>Alquilar</b></h4></button>
                         </ion-item>
-                        <div id="descript">
-                            <h5><b>Descripción:</b></h5>
-                            <h6>{{dat.description}}</h6>
-                        </div>
                     </ion-col>
                     
-    
                 </ion-row>
             </ion-card>
         </ion-row>
     </ion-grid>
-    
 
-    <!-- lista con mis mangas  *ngFor="let dev of gHistorialDetalle"-->
+    <!-- detalle de la carta-->
+
+    <ion-grid *ngIf="ventana === 'Detalle_card'">
+        <ion-col *ngFor="let info of datsDetalle">
+            <ion-title><ion-icon name="arrow-back-outline" (click)="back()">Back</ion-icon></ion-title>
+            <ion-row><h2>{{info.title}}</h2></ion-row>
+            <ion-row>
+                <img src="http://localhost:8080/api/mangas/image/{{info.img}}" alt="{{info.img}}">
+            </ion-row>
+
+            <ion-item>
+                <h4 slot="start">Disponibles: {{info.amount}}</h4>
+                <h4 slot="end">precio: {{info.price}}</h4>
+            </ion-item>
+            <ion-item lines="none">
+                <ion-title>Descripción:</ion-title>
+            </ion-item>
+            <ion-item>
+                <ion-content>{{info.description}}</ion-content>
+            </ion-item>
+
+        </ion-col>
+    </ion-grid>   
+
+    <!-- lista con mis mangas -->
     <ion-list *ngIf="ventana === 'mis_manga'">
-        <!-- *ngFor="let dev of detallesDB" -->
-        <ion-item *ngFor="let dev of gHistorialDetalle">
-            <ion-label>{{dev.idDetail_ma}}</ion-label>
-            <ion-label>Titulo manga: {{dev.idMangaFKName}}</ion-label>
-            <ion-label>Fecha_alquiler: {{dev.fechaAlquiler}}</ion-label>
+        <ion-item *ngFor="let dev of gHistorialDetalle; let i = index">
+            <ion-label>{{ i + 1 }}</ion-label>
+            <ion-label>Titulo manga: {{ dev.idMangaFKName }}</ion-label>
+            <ion-label>fecha devolucion: {{ dev.fecha_devolucion }}</ion-label>
             <button id="button_misMangas" (click)="devolver(dev)">Devolver</button>
         </ion-item>
-    </ion-list>
+        <ion-item *ngIf="gHistorialDetalle.length === 0">
+            <ion-label>
+                Aun no tienes mangas alquilados 
+            </ion-label>
+        </ion-item>
+    </ion-list>    
 
     <!-- Formulario para registrarse -->
     <div id="espacio_registro" *ngIf="ventana === 'registro'">
