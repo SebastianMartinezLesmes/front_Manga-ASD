@@ -80,6 +80,7 @@
             <ion-label>{{ i + 1 }}</ion-label>
             <ion-label>Titulo manga: {{ dev.idMangaFKName }}</ion-label>
             <ion-label>fecha devolucion: {{ dev.fecha_devolucion }}</ion-label>
+            <ion-label>estado: {{dev.restore}}</ion-label>
             <button id="button_misMangas" (click)="devolver(dev)">Devolver</button>
         </ion-item>
         <ion-item *ngIf="gHistorialDetalle.length === 0">

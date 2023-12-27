@@ -63,6 +63,8 @@ export class HomePage {
     this.description = '';
     this.cant = 0;
     this.price = 0;
+
+    this.ima = '';
   };
 
   mostrarManga() { this.ventana = ''; this.changeList(); }
@@ -114,7 +116,7 @@ export class HomePage {
       mangaFormData.append('price', this.price.toString());
       mangaFormData.append('file', this.ima);  // Asegúrate de que this.ima sea un File
 
-      console.log(mangaFormData);
+      console.log('mangaFormData:\n'+mangaFormData);
 
       /* Aquí la función para crear el manga */
       axios.post('http://localhost:8080/api/mangas/add', mangaFormData, {
@@ -125,11 +127,11 @@ export class HomePage {
       }).then(response => {
         this.presentAlert("Manga creado exitosamente", "");
         console.log('Respuesta del servidor:', response.data);
+        this.limpiar();
       }).catch(error => {
         this.presentAlert("Error al crear el manga", "");
         console.error('Error al crear el manga,', error);
       });
-
       this.getMangas();
     }
     this.limpiar();
@@ -372,7 +374,11 @@ export class HomePage {
               console.log('datos: \n'+manga.fechaAlquiler+'\n'+manga.fechaDevolucion+'\n'+manga.idMangaFK.idManga+'\n'+manga.idUserFK.idUsuario);
 
               /*metodo para enviar el id del manga y del usuario*/
-              axios.post('http://localhost:8080/api/details/add', manga, { headers: { 'Content-Type': 'application/json' }})
+              axios.post('http://localhost:8080/api/details/add', manga, { headers: 
+              { 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.tokenKey}`
+              }}
+              )
               .then(response => {
                 console.log('Respuesta del servidor:', response.data);
                 this.presentAlert("Manga alquilado", "Disfruta de tu manga y no se te olvide devolverlo.");
