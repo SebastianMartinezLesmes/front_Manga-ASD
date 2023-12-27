@@ -65,6 +65,7 @@ export class HomePage {
     this.price = 0;
 
     this.ima = '';
+    this.imageSrc = '';
   };
 
   mostrarManga() { this.ventana = ''; this.changeList(); }
