@@ -339,7 +339,7 @@ export class HomePage {
   };
 
   /*funcion para alquilar un manga*/
-  async alquilar(dat: any) {
+  async alquilar(info: any) {
     const alert = await this.alertController.create({
       header: '¿Está seguro de que desea alquilar este manga?',
       message: 'Despues de alquilarlo tendras 15 dias para devolverlo.',
@@ -360,15 +360,16 @@ export class HomePage {
               let year = fecha_actual.getFullYear();
               let month = (fecha_actual.getMonth() + 1).toString().padStart(2, '0');
               let day = fecha_actual.getDate().toString().padStart(2, '0');
+              let dayBack = (fecha_actual.getDate()+15).toString().padStart(2, '0');
             
               // Construye la fecha en el formato "A/M/D"
               let fecha = `${year}-${month}-${day}`;
-              let fecha_devolucion = `${year}-${month}-${day+15}`;
+              let fecha_devolucion = `${year}-${month}-${dayBack}`;
 
               let manga = {
                 fechaAlquiler: fecha,
                 fechaDevolucion: fecha_devolucion,
-                idMangaFK:{ idManga: dat.idManga},
+                idMangaFK:{ idManga: info.idManga},
                 idUserFK:{ idUsuario:this.idU }
               }
               console.log('datos: \n'+manga.fechaAlquiler+'\n'+manga.fechaDevolucion+'\n'+manga.idMangaFK.idManga+'\n'+manga.idUserFK.idUsuario);
@@ -395,6 +396,42 @@ export class HomePage {
     }); await alert.present();
   };
 
+  carro:any[] = [];
+  agregarCarro(info:any){
+    if(this.cargo === 'visitante'){
+      this.presentAlert("Error al agragar al carro", "registrate primero.");
+    }
+    else{
+      let fecha_actual = new Date();
+      let year = fecha_actual.getFullYear();
+      let month = (fecha_actual.getMonth() + 1).toString().padStart(2, '0');
+      let day = fecha_actual.getDate().toString().padStart(2, '0');
+      let dayBack = (fecha_actual.getDate()+15).toString().padStart(2, '0');
+    
+      // Construye la fecha en el formato "A/M/D"
+      let fecha = `${year}-${month}-${day}`;
+      let fecha_devolucion = `${year}-${month}-${dayBack}`;
+
+      let manga = {
+        fechaAlquiler: fecha,
+        fechaDevolucion: fecha_devolucion,
+        idMangaFK:{ idManga: info.idManga},
+        idUserFK:{ idUsuario:this.idU }
+      }
+        
+      const detalleObject = {
+        title: info.title,
+        description: info.description,
+        img: info.image,
+        price: info.price,
+        amount: info.amount
+      }
+      console.log('manga:\n'+ manga+'\ndetalle: \n'+detalleObject);
+      this.carro.push(manga);
+      console.log(this.carro);
+    }
+  }
+
   /*aca esta la funcion para devolver manga*/
   devolver(dev: any) {
     let idDetail_ma = dev.idDetail_ma;
@@ -420,13 +457,14 @@ export class HomePage {
     this.ventana = 'Detalle_card';
 
     const detalleObject = {
+      idManga : dat.idManga,
       title: dat.title,
       description: dat.description,
       img: dat.image,
       price: dat.price,
       amount: dat.amount
     };
-    console.log(detalleObject)
+    console.log('detalleObject'+ this.datsDetalle)
     this.datsDetalle.push(detalleObject);
   }
   back(){

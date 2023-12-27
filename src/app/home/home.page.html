@@ -40,8 +40,7 @@
                             <img *ngIf="dat.image === null || dat.image.trim() === ''" src="../../assets/sin_foto.gif">
                         </div><br><br>
                         <ion-item lines='none'>
-                            <button slot="start" id="buttonC" (click)="detalle(dat)" expand="full"><h4><b>Detalle</b></h4></button>
-                            <button slot="end" id="buttonC" (click)="alquilar(dat)" expand="full"><h4><b>Alquilar</b></h4></button>
+                            <button id="buttonC" (click)="detalle(dat)" expand="full"><h4><b>Detalle</b></h4></button>
                         </ion-item>
                     </ion-col>
                     
@@ -66,9 +65,14 @@
             </ion-item>
             <ion-item lines="none">
                 <ion-title>Descripción:</ion-title>
+                <ion-content>id {{info.idManga}}</ion-content>
             </ion-item>
-            <ion-item>
+            <ion-item lines="none">
                 <ion-content>{{info.description}}</ion-content>
+            </ion-item>
+            <ion-item lines="none">
+                <button slot="start" id="buttonC" (click)="alquilar(info)" expand="full"><h4><b>Alquilar<ion-icon name="card"></ion-icon></b></h4></button>
+                <button slot="end" id="buttonC" (click)="agregarCarro(info)" expand="full"><h4><b><ion-icon name="cart"></ion-icon></b></h4></button>
             </ion-item>
 
         </ion-col>
