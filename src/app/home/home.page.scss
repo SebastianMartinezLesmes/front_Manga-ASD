@@ -216,6 +216,14 @@ ion-content{
 
 /*estilo para lista de mis mangas*/
 
+#list_Admin{ 
+    ion-list{
+        ion-label{
+            color: rgba(33,37,41);
+        }
+    }
+}
+
 #list{
     background-color: transparent;
     #button_misMangas{

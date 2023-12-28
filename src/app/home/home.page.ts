@@ -71,7 +71,7 @@ export class HomePage {
   mostrarManga() { this.ventana = ''; this.changeList(); }
   mostrarregistro() { this.ventana = 'registro'; this.changeList(); }
   mostrarCrearUsuario() { this.ventana = 'crear_usuario'; this.changeList(); }
-  mostrarUsuarios(){ this.ventana = ' ver_usuarios'; this.changeList();}
+  mostrarUsuarios(){ this.ventana = 'ver_usuarios'; this.changeList();}
   mostrarCrearManga() { this.ventana = 'crear_manga'; this.changeList(); }
   mostrarMisMangas() { this.ventana = 'mis_manga'; this.changeList(); }
 
@@ -343,7 +343,7 @@ export class HomePage {
 
   /* aca ser resiven los usuarios*/
 
-  usuariosDB: any = [];
+  usuariosDB: any= [];
   getUser() {
     this.http.get('http://localhost:8080/api/users/list').subscribe(
       (response) => {

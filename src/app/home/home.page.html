@@ -398,13 +398,17 @@
                 </ion-grid>   
 
                 <!--lista usuarios-->
-                <ion-list id="list" *ngIf="ventana === 'ver_usuarios'">
-                    <ion-item *ngFor="let d of usuariosDB; let i = index">
-                        <ion-label>{{ i + 1 }}</ion-label>
-                        <ion-label>Nombre: {{d.name}}</ion-label>
-                        <ion-label>Nombre Usuario: {{ d.username }}</ion-label>
-                    </ion-item>
-                </ion-list>
+                <div id="list_Admin" *ngIf="ventana === 'ver_usuarios'">
+                    <ion-list *ngFor="let d of usuariosDB">
+                        <ion-item>
+                            <ion-row>
+                                <ion-col>{{d.idUsuario}}</ion-col>
+                                <ion-col>Nombre: {{d.name}}</ion-col>
+                                <ion-col>Nombre Usuario: {{ d.username }}</ion-col>
+                            </ion-row>
+                        </ion-item>
+                    </ion-list>
+                </div>
 
             </ion-col>
 
