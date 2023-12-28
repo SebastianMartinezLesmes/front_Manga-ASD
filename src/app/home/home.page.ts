@@ -71,6 +71,7 @@ export class HomePage {
   mostrarManga() { this.ventana = ''; this.changeList(); }
   mostrarregistro() { this.ventana = 'registro'; this.changeList(); }
   mostrarCrearUsuario() { this.ventana = 'crear_usuario'; this.changeList(); }
+  mostrarUsuarios(){ this.ventana = ' ver_usuarios'; this.changeList();}
   mostrarCrearManga() { this.ventana = 'crear_manga'; this.changeList(); }
   mostrarMisMangas() { this.ventana = 'mis_manga'; this.changeList(); }
 
@@ -260,7 +261,9 @@ export class HomePage {
 
           this.ventana = '';
           this.getHistorialF();
-          this.presentAlert("usuario registrado", "ahora puedes alquilar tu manga");
+
+          if( this.cargo === 'administrador' ){ this.presentAlert("usuario registrado", "ahora puedes administrar la paguina"); this.getUser();}
+          else{ this.presentAlert("usuario registrado", "ahora puedes alquilar tu manga"); }
 
           //requestHeaders
           console.log(this.requestHeaders);
@@ -272,8 +275,9 @@ export class HomePage {
           console.log(this.requestHeaders);
           this.presentAlert("usuario inexistente", "");
         });
-
-    } this.limpiar();
+    } 
+    this.limpiar();
+    this.list = 'false';
   };
 
   /* aca se manejan las imagenes de crear mangas*/
@@ -320,9 +324,6 @@ export class HomePage {
   //aca recibe los detalles del alquiler
   detallesDB: any = [];
   gHistorialDetalle: any = [];
-  getHistorial() {
-    axios.get('http://localhost:8080/api/details/list').then((response) => console.log('respuesta del detalle ' + response)).catch((response) => console.log('respuesta del detalle ' + response.data))
-  };
 
   getHistorialF() {
     let headers = new HttpHeaders();
@@ -332,10 +333,24 @@ export class HomePage {
       (response) => {
         console.log('Respuesta del servidor:', response);
         this.detallesDB = response;
+        console.log(this.detallesDB);
         /* aca se filtran los detalles*/
         this.gHistorialDetalle = this.detallesDB.filter((u: any) => u.idUserFK.idUsuario === this.idU);
         console.log(this.detallesDB);
       }
+    )
+  };
+
+  /* aca ser resiven los usuarios*/
+
+  usuariosDB: any = [];
+  getUser() {
+    this.http.get('http://localhost:8080/api/users/list').subscribe(
+      (response) => {
+        console.log('Respuesta del servidor:', response);
+        this.usuariosDB = response;
+        console.log(this.usuariosDB);
+      },(error) => { console.error('Error al obtener datos del servidor:', error); }
     )
   };
 

@@ -1,233 +1,427 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" *ngIf="cargo !== 'administrador'">
     <ion-toolbar>
       <nav class="navbar navbar-dark bg-dark">
         <div class="container-fluid">
-          <button (click)="changeList()" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
           <ion-avatar>
             <ion-img src="../../assets/logo.png"></ion-img>
           </ion-avatar>
+
+          <button (click)="changeList()" class="navbar-toggler" type="button" data-bs-toggle="collapse"  aria-controls="navbarToggleExternalContent">
+            <span class="navbar-toggler-icon"></span>
+          </button>
         </div>
       </nav>
-      <div *ngIf="list === 'true'" class="list-container">
-        <div id="experimental">
-          <button (click)="mostrarCrearManga()" class="experimentalB" *ngIf="cargo === 'administrador'"><b>Publicar manga</b></button>
-          <button (click)="mostrarCrearUsuario()" class="experimentalB"><b>Crear usuario</b></button>
-          <button (click)="mostrarManga()" class="experimentalB"><b>lista Mangas</b></button>
-          <button (click)="mostrarMisMangas()" class="experimentalB" *ngIf="cargo !== 'visitante'"><b>Mangas alquilados</b></button>
-          <button (click)="mostrarregistro()" class="experimentalB" *ngIf="cargo === 'visitante'"><b>login</b></button>
-        </div>
-      </div>
     </ion-toolbar>
-  </ion-header>
+</ion-header>
 
-<ion-content [fullscreen]="true"><br>
+<ion-header [translucent]="true" *ngIf="cargo === 'administrador'">
+    <ion-toolbar>
+      <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+          <ion-avatar>
+            <ion-img src="../../assets/logo.png"></ion-img>
+          </ion-avatar>
+          <ion-button (click)="changeList()">menu</ion-button>
+        </div>
+      </nav>
+    </ion-toolbar>
+</ion-header>
 
-    <!--cartas de los mangas -->
+<ion-content [fullscreen]="true" *ngIf="cargo !== 'administrador'">
+
+    <ion-grid>
+        <ion-row>
+
+            <!--contenido -->
+            <ion-col id="content">
+
+                <!--cartas de los mangas -->
     
-    <ion-grid *ngIf="ventana === ''">
-        <ion-row id="content_card">
-            <ion-card id="card" *ngFor="let dat of mangasDB">
-                <ion-row>
-    
-                    <ion-col id="content_card">
-                        <ion-item lines="none">
-                            <h2 id="title" slot="start"><b><i>{{dat.title}}</i></b></h2>
-                        </ion-item>
-                        <div id="ima_container">
-                            <img *ngIf="dat.image !== null" id="ima" src="http://localhost:8080/api/mangas/image/{{dat.image}}" alt="No funciona">
-                            <img *ngIf="dat.image === null || dat.image.trim() === ''" src="../../assets/sin_foto.gif">
-                        </div><br><br>
-                        <ion-item lines='none'>
-                            <button id="buttonC" (click)="detalle(dat)" expand="full"><h4><b>Detalle</b></h4></button>
-                        </ion-item>
+                <ion-grid id="grid_card" *ngIf="ventana === ''">
+                    <ion-row>
+                        <ion-card id="card" *ngFor="let dat of mangasDB">
+                            <div>
+                                <p><b><i>{{dat.title}}</i></b></p>
+                                <button (click)="detalle(dat)"><b>Detalle</b></button>
+                            </div>
+                            <img id="ima_card" src="http://localhost:8080/api/mangas/image/{{dat.image}}" alt="No funciona">
+                        </ion-card>
+                    </ion-row>
+                </ion-grid>    
+
+                <!-- detalle de la carta-->
+                <ion-grid id="detalle_card" *ngIf="ventana === 'Detalle_card'">
+                    <ion-col *ngFor="let info of datsDetalle">
+                        <ion-title>
+                            <ion-icon name="arrow-back-outline" (click)="back()">Back</ion-icon>
+                        </ion-title>
+                        <div id="div3">
+                            <p>{{info.title}}</p>
+                        </div>
+                        <ion-row id="content_imagenDetalle">
+                            <img src="http://localhost:8080/api/mangas/image/{{info.img}}" alt="{{info.img}}">
+                        </ion-row>
+                        <div id="div2">
+                            <h4> Disponibles: {{info.amount}}</h4>
+                            <h4> precio: {{info.price}}</h4>
+                        </div>
+                        <div>
+                            <ion-title>Descripción:</ion-title><br>
+                            <h3>{{info.description}}</h3>
+                        </div>
+                        <div id="content_botones_detalle" lines="none">
+                            <ion-grid>
+                                <ion-row>
+                                    <ion-col>
+                                        <button id="buttonDetalle" (click)="alquilar(info)" expand="full"><p><b>Alquilar</b></p><ion-icon name="card"></ion-icon></button>
+                                    </ion-col>
+                                    <ion-col></ion-col>
+                                    <ion-col>
+                                        <button (click)="agregarCarro(info)" expand="full"><p><b>Añadir</b></p><ion-icon name="cart"></ion-icon></button>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-grid>
+                        </div>
+
                     </ion-col>
-                    
-                </ion-row>
-            </ion-card>
-        </ion-row>
-    </ion-grid>
+                </ion-grid>   
 
-    <!-- detalle de la carta-->
-
-    <ion-grid *ngIf="ventana === 'Detalle_card'">
-        <ion-col *ngFor="let info of datsDetalle">
-            <ion-title><ion-icon name="arrow-back-outline" (click)="back()">Back</ion-icon></ion-title>
-            <ion-row><h2>{{info.title}}</h2></ion-row>
-            <ion-row>
-                <img src="http://localhost:8080/api/mangas/image/{{info.img}}" alt="{{info.img}}">
-            </ion-row>
-
-            <ion-item>
-                <h4 slot="start">Disponibles: {{info.amount}}</h4>
-                <h4 slot="end">precio: {{info.price}}</h4>
-            </ion-item>
-            <ion-item lines="none">
-                <ion-title>Descripción:</ion-title>
-                <ion-content>id {{info.idManga}}</ion-content>
-            </ion-item>
-            <ion-item lines="none">
-                <ion-content>{{info.description}}</ion-content>
-            </ion-item>
-            <ion-item lines="none">
-                <button slot="start" id="buttonC" (click)="alquilar(info)" expand="full"><h4><b>Alquilar<ion-icon name="card"></ion-icon></b></h4></button>
-                <button slot="end" id="buttonC" (click)="agregarCarro(info)" expand="full"><h4><b><ion-icon name="cart"></ion-icon></b></h4></button>
-            </ion-item>
-
-        </ion-col>
-    </ion-grid>   
-
-    <!-- lista con mis mangas -->
-    <ion-list *ngIf="ventana === 'mis_manga'">
-        <ion-item *ngFor="let dev of gHistorialDetalle; let i = index">
-            <ion-label>{{ i + 1 }}</ion-label>
-            <ion-label>Titulo manga: {{ dev.idMangaFKName }}</ion-label>
-            <ion-label>fecha devolucion: {{ dev.fecha_devolucion }}</ion-label>
-            <ion-label>estado: {{dev.restore}}</ion-label>
-            <button id="button_misMangas" (click)="devolver(dev)">Devolver</button>
-        </ion-item>
-        <ion-item *ngIf="gHistorialDetalle.length === 0">
-            <ion-label>
-                Aun no tienes mangas alquilados 
-            </ion-label>
-        </ion-item>
-    </ion-list>    
-
-    <!-- Formulario para registrarse -->
-    <div id="espacio_registro" *ngIf="ventana === 'registro'">
-        <form class="row g-3" id="form_registro" (ngSubmit)="login()">
-            <p id="titulo_registro"><b><i>Login</i></b></p>
-            
-            <div class="form-floating mb-3">
-                <input type="email" class="form-control" placeholder="name@example.com" [(ngModel)]="email" name="email">
-                <label for="floatingInput">Email address</label>
-            </div>
-            
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control" placeholder="Password" [(ngModel)]="password" name="password">
-                <label for="floatingPassword">Password</label>
-            </div>
-            
-            <div>
-                <button type="submit" id="button_registro" class="btn btn-primary mb-3"><b>Confirm identity</b></button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Formulario para crear mangas -->
-    <div id="espacio_publicarManga" *ngIf="ventana === 'crear_manga'">
-        <div id="titulo_publicarManga">
-            <p>Publicar un manga</p>
-        </div>
-        <div class="container text-center">
-            <div class="row">
-                <div class="col" id="campos1">
-                    <div class="mb-3">
-                        <div class="form-floating" id="campo_publicarManga">
-                            <input [(ngModel)]="title" type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
-                            <label for="exampleFormControlInput1">Titulo del manga</label>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-floating" id="campo_publicarManga">
-                            <textarea [(ngModel)]="description" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                            <label for="exampleFormControlTextarea1">Descripción</label>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-floating" id="campo_publicarManga">
-                            <input [(ngModel)]="cant" type="number" class="form-control" id="exampleFormControlInput2" placeholder="colocar solo numeros">
-                            <label for="exampleFormControlInput2">Cantidad disponible</label>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="form-floating" id="campo_publicarManga">
-                            <input [(ngModel)]="price" type="number" class="form-control" id="exampleFormControlInput3" placeholder="Precio manga">
-                            <label for="exampleFormControlInput3">Precio manga</label>
-                        </div>
-                    </div>                    
-                </div>
-                <div class="col">
-                    <ion-item id="putFile_publicarManga">
-                        <input type="file" (change)="previewImage($event)" accept="image/*">
+                <!-- lista con mis mangas -->
+                <ion-list id="list" *ngIf="ventana === 'mis_manga'">
+                    <ion-item *ngFor="let dev of detallesDB; let i = index">
+                        <ion-label>{{ i + 1 }}</ion-label>
+                        <ion-label>Titulo manga: {{ dev.idMangaFKName }}</ion-label>
+                        <ion-label>fecha devolucion: {{ dev.fecha_devolucion }}</ion-label>
+                        <ion-label>estado: {{dev.restore}}</ion-label>
                     </ion-item>
-                    <div *ngIf="imageSrc" id="imgFile_publicarManga">
-                        <ion-img [src]="imageSrc" style="border-radius: 20px; max-width: 100%; height: 280px;"></ion-img>
-                    </div>                  
-                </div>                
-            </div>
-        </div>
-        <div id="cajaButton_publicarManga">
-            <button (click)="crearManga()" type="submit" class="btn btn-primary" id="button_publicarManga"><b>Public</b></button>
-        </div>
-    </div>
+                    <ion-card id="alquilalo" *ngIf="detallesDB.length === 0">
+                        <ion-item lines="none">
+                            <ion-label slot="start"> Aun no tienes mangas alquilados, alquila uno antes que se acaben </ion-label>
+                        </ion-item>
+                        <img src="../../assets/senal.png" alt="imagen">
+                    </ion-card>
+                </ion-list>    
 
-    <!-- Formulario para crear usuarios -->
-    <div id="espacio_crearUsuario" *ngIf="ventana === 'crear_usuario'">
-        <form id="formulario_crearUsuario" class="bg-dark p-5 rounded">
-            <div id="titulo_crearUsuario" class="mb-4 text-center">
-                <h3>Formulario para Crear Usuario</h3>
-            </div>
-            <div class="grupo-inputs mb-4">
-                <div class="row g-3 align-items-center">
-                    <div class="col-md-4">
-                        <label for="nombreInput" class="col-form-label">Nombre</label>
-                    </div>
-                    <div class="col-md-auto">
-                        <input [(ngModel)]="name" name="nombreInput" type="text" class="form-control" placeholder="Ingrese su nombre">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="apellidoInput" class="col-form-label">Apellido</label>
-                    </div>
-                    <div class="col-md-auto">
-                        <input [(ngModel)]="lastName" name="apellidoInput" type="text" class="form-control" placeholder="Ingrese su apellido">
-                    </div>
+                <!-- Formulario para registrarse -->
+                <div id="espacio_registro" *ngIf="ventana === 'registro'">
+                    <form class="row g-3" id="form_registro" (ngSubmit)="login()">
+                        <p id="titulo_registro"><b><i>Login</i></b></p>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" placeholder="name@example.com" [(ngModel)]="email" name="email">
+                            <label for="floatingInput">Email address</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" placeholder="Password" [(ngModel)]="password" name="password">
+                            <label for="floatingPassword">Password</label>
+                        </div>
+                        
+                        <div>
+                            <button type="submit" id="button_registro" class="btn btn-primary mb-3"><b>Confirm identity</b></button>
+                        </div>
+                    </form>
                 </div>
-            </div>
-            <div class="grupo-inputs mb-4">
-                <div class="row g-3 align-items-center">
-                    <div class="col-md-4">
-                        <label for="emailInput" class="col-form-label">Email</label>
-                    </div>
-                    <div class="col-md-auto">
-                        <input [(ngModel)]="email" name="emailInput" type="email" class="form-control" placeholder="name@example.com">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="celularInput" class="col-form-label">Celular</label>
-                    </div>
-                    <div class="col-md-auto">
-                        <input [(ngModel)]="celular" name="celularInput" type="text" class="form-control" placeholder="Ingrese su celular">
-                    </div>
+
+                <!-- Formulario para crear usuarios -->
+                <div id="espacio_crearUsuario" *ngIf="ventana === 'crear_usuario'">
+                    <form id="formulario_crearUsuario" class="bg-dark p-5 rounded">
+                        <div id="titulo_crearUsuario" class="mb-4 text-center">
+                            <h3>Formulario para Crear Usuario</h3>
+                        </div>
+                        <div class="grupo-inputs mb-4">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-4">
+                                    <label for="nombreInput" class="col-form-label">Nombre</label>
+                                </div>
+                                <div class="col-md-auto">
+                                    <input [(ngModel)]="name" name="nombreInput" type="text" class="form-control" placeholder="Ingrese su nombre">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="apellidoInput" class="col-form-label">Apellido</label>
+                                </div>
+                                <div class="col-md-auto">
+                                    <input [(ngModel)]="lastName" name="apellidoInput" type="text" class="form-control" placeholder="Ingrese su apellido">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grupo-inputs mb-4">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-4">
+                                    <label for="emailInput" class="col-form-label">Email</label>
+                                </div>
+                                <div class="col-md-auto">
+                                    <input [(ngModel)]="email" name="emailInput" type="email" class="form-control" placeholder="name@example.com">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="celularInput" class="col-form-label">Celular</label>
+                                </div>
+                                <div class="col-md-auto">
+                                    <input [(ngModel)]="celular" name="celularInput" type="text" class="form-control" placeholder="Ingrese su celular">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grupo-inputs mb-4">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-4">
+                                    <label for="usernameInput" class="col-form-label">Username</label>
+                                </div>
+                                <div class="col-md-auto">
+                                    <input [(ngModel)]="otherName" name="usernameInput" type="text" class="form-control" placeholder="Elija nombre para su usuario">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="passwordInput" class="col-form-label">Password</label>
+                                </div>
+                                <div class="col-md-auto">
+                                    <input [(ngModel)]="password" name="passwordInput" type="password" class="form-control" placeholder="Elija una contraseña">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="crearUsuario_button" class="text-center">
+                            <button type="submit" class="btn btn-primary" (click)="crearUsuario()"><b>Crear Usuario</b></button>
+                        </div>
+                    </form>    
                 </div>
-            </div>
-            <div class="grupo-inputs mb-4">
-                <div class="row g-3 align-items-center">
-                    <div class="col-md-4">
-                        <label for="usernameInput" class="col-form-label">Username</label>
+            </ion-col>
+
+            <!--menu lateral -->
+            <ion-col *ngIf="list === 'true'" size="auto">
+                <div class="list-container">
+                    <div id="experimental">
+                        <div *ngIf="ventana !== 'crear_usuario'"><button (click)="mostrarCrearUsuario()" class="experimentalB"><b>Crear usuario</b></button></div>
+                        <div *ngIf="ventana !== 'registro'"><button (click)="mostrarregistro()" class="experimentalB" *ngIf="cargo === 'visitante'"><b>login</b></button></div>  
+                        <div *ngIf="ventana !== 'registro'"><button (click)="mostrarregistro()" class="experimentalB" *ngIf="cargo !== 'visitante'"><b>Cambiar usuario</b></button></div>  
+                        <div *ngIf="ventana !== ''"><button (click)="mostrarManga()" class="experimentalB"><b>lista Mangas</b></button></div>
+                        <div *ngIf="ventana !== 'mis_manga'"><button (click)="mostrarMisMangas()" class="experimentalB" *ngIf="cargo !== 'visitante'"><b>Mangas alquilados</b></button></div>
                     </div>
-                    <div class="col-md-auto">
-                        <input [(ngModel)]="otherName" name="usernameInput" type="text" class="form-control" placeholder="Elija nombre para su usuario">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="passwordInput" class="col-form-label">Password</label>
-                    </div>
-                    <div class="col-md-auto">
-                        <input [(ngModel)]="password" name="passwordInput" type="password" class="form-control" placeholder="Elija una contraseña">
-                    </div>
-                </div>
-            </div>
-            <!-- Botón de envío -->
-            <div id="crearUsuario_button" class="text-center">
-                <button type="submit" class="btn btn-primary" (click)="crearUsuario()"><b>Crear Usuario</b></button>
-            </div>
-        </form>    
-    </div>
+                  </div>
+            </ion-col>
+
+        </ion-row>
+      </ion-grid>
 
 <!-- Bootstrap JS y Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
+</ion-content>
+
+<!-- paguina del administrador-->
+<ion-content *ngIf="cargo === 'administrador'">
+    <ion-grid>
+
+        <ion-row>
+            <!-- contenido del cuerpo-->
+            <ion-col>
+
+                <!-- Formulario para crear mangas -->
+                <div id="espacio_publicarManga" *ngIf="ventana === 'crear_manga'">
+                    <div id="titulo_publicarManga">
+                        <p>Publicar un manga</p>
+                    </div>
+                    <div class="container text-center">
+                        <div class="row">
+                            <div class="col" id="campos1">
+                                <div class="mb-3">
+                                    <div class="form-floating" id="campo_publicarManga">
+                                        <input [(ngModel)]="title" type="text" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+                                        <label for="exampleFormControlInput1">Titulo del manga</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-floating" id="campo_publicarManga">
+                                        <textarea [(ngModel)]="description" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                        <label for="exampleFormControlTextarea1">Descripción</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-floating" id="campo_publicarManga">
+                                        <input [(ngModel)]="cant" type="number" class="form-control" id="exampleFormControlInput2" placeholder="colocar solo numeros">
+                                        <label for="exampleFormControlInput2">Cantidad disponible</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-floating" id="campo_publicarManga">
+                                        <input [(ngModel)]="price" type="number" class="form-control" id="exampleFormControlInput3" placeholder="Precio manga">
+                                        <label for="exampleFormControlInput3">Precio manga</label>
+                                    </div>
+                                </div>                    
+                            </div>
+                            <div class="col">
+                                <ion-item id="putFile_publicarManga">
+                                    <input type="file" (change)="previewImage($event)" accept="image/*">
+                                </ion-item>
+                                <div *ngIf="imageSrc" id="imgFile_publicarManga">
+                                    <ion-img [src]="imageSrc" style="border-radius: 20px; max-width: 100%; height: 280px;"></ion-img>
+                                </div>                  
+                            </div>                
+                        </div>
+                    </div>
+                    <div id="cajaButton_publicarManga">
+                        <button (click)="crearManga()" type="submit" class="btn btn-primary" id="button_publicarManga"><b>Public</b></button>
+                    </div>
+                </div>
+
+                <!-- lista con mis mangas -->
+                <ion-list id="list" *ngIf="ventana === 'mis_manga'">
+                    <ion-item *ngFor="let dev of detallesDB; let i = index">
+                        <ion-label>{{ i + 1 }}</ion-label>
+                        <ion-label>Titulo manga: {{ dev.idMangaFKName }}</ion-label>
+                        <ion-label>fecha devolucion: {{ dev.fecha_devolucion }}</ion-label>
+                        <ion-label>estado: {{dev.restore}}</ion-label>
+                    </ion-item>
+                    <ion-card id="alquilalo" *ngIf="detallesDB.length === 0">
+                        <ion-item lines="none">
+                            <ion-label slot="start"> Aun no tienes mangas alquilados, alquila uno antes que se acaben </ion-label>
+                        </ion-item>
+                        <img src="../../assets/senal.png" alt="imagen">
+                    </ion-card>
+                </ion-list>
+
+                <!-- Formulario para crear usuarios -->
+                <div id="espacio_crearUsuario" *ngIf="ventana === 'crear_usuario'">
+                    <form id="formulario_crearUsuario" class="bg-dark p-5 rounded">
+                        <div id="titulo_crearUsuario" class="mb-4 text-center">
+                            <h3>Formulario para Crear Usuario</h3>
+                        </div>
+                        <div class="grupo-inputs mb-4">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-4">
+                                    <label for="nombreInput" class="col-form-label">Nombre</label>
+                                </div>
+                                <div class="col-md-auto">
+                                    <input [(ngModel)]="name" name="nombreInput" type="text" class="form-control" placeholder="Ingrese su nombre">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="apellidoInput" class="col-form-label">Apellido</label>
+                                </div>
+                                <div class="col-md-auto">
+                                    <input [(ngModel)]="lastName" name="apellidoInput" type="text" class="form-control" placeholder="Ingrese su apellido">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grupo-inputs mb-4">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-4">
+                                    <label for="emailInput" class="col-form-label">Email</label>
+                                </div>
+                                <div class="col-md-auto">
+                                    <input [(ngModel)]="email" name="emailInput" type="email" class="form-control" placeholder="name@example.com">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="celularInput" class="col-form-label">Celular</label>
+                                </div>
+                                <div class="col-md-auto">
+                                    <input [(ngModel)]="celular" name="celularInput" type="text" class="form-control" placeholder="Ingrese su celular">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grupo-inputs mb-4">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-4">
+                                    <label for="usernameInput" class="col-form-label">Username</label>
+                                </div>
+                                <div class="col-md-auto">
+                                    <input [(ngModel)]="otherName" name="usernameInput" type="text" class="form-control" placeholder="Elija nombre para su usuario">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="passwordInput" class="col-form-label">Password</label>
+                                </div>
+                                <div class="col-md-auto">
+                                    <input [(ngModel)]="password" name="passwordInput" type="password" class="form-control" placeholder="Elija una contraseña">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="crearUsuario_button" class="text-center">
+                            <button type="submit" class="btn btn-primary" (click)="crearUsuario()"><b>Crear Usuario</b></button>
+                        </div>
+                    </form>    
+                </div>   
+
+                <!-- Formulario para cambio de usuario -->
+                <div id="espacio_registro" *ngIf="ventana === 'registro'">
+                    <form class="row g-3" id="form_registro" (ngSubmit)="login()">
+                        <p id="titulo_registro"><b><i>Cambio de usuario</i></b></p>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" placeholder="name@example.com" [(ngModel)]="email" name="email">
+                            <label for="floatingInput">Email address</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" placeholder="Password" [(ngModel)]="password" name="password">
+                            <label for="floatingPassword">Password</label>
+                        </div>
+                        
+                        <div>
+                            <button type="submit" id="button_registro" class="btn btn-primary mb-3"><b>Confirm identity</b></button>
+                        </div>
+                    </form>
+                </div>
+
+                <!--cartas de los mangas -->
+                <ion-grid id="grid_card" *ngIf="ventana === ''">
+                    <ion-row>
+                        <ion-card id="card" *ngFor="let dat of mangasDB">
+                            <div>
+                                <p><b><i>{{dat.title}}</i></b></p>
+                                <button (click)="detalle(dat)"><b>Detalle</b></button>
+                                <button></button>
+                            </div>
+                            <img id="ima_card" src="http://localhost:8080/api/mangas/image/{{dat.image}}" alt="No funciona">
+                        </ion-card>
+                    </ion-row>
+                </ion-grid> 
+
+                <!-- detalle de la carta-->
+                <ion-grid id="detalle_card" *ngIf="ventana === 'Detalle_card'">
+                    <ion-col *ngFor="let info of datsDetalle">
+                        <ion-title>
+                            <ion-icon name="arrow-back-outline" (click)="back()">Back</ion-icon>
+                        </ion-title>
+                        <div id="div3">
+                            <p>{{info.title}}</p>
+                        </div>
+                        <ion-row id="content_imagenDetalle">
+                            <img src="http://localhost:8080/api/mangas/image/{{info.img}}" alt="{{info.img}}">
+                        </ion-row>
+                        <div id="div2">
+                            <h4> Disponibles: {{info.amount}}</h4>
+                            <h4> precio: {{info.price}}</h4>
+                        </div>
+                        <div>
+                            <ion-title>Descripción:</ion-title><br>
+                            <h3>{{info.description}}</h3>
+                        </div>
+
+                    </ion-col>
+                </ion-grid>   
+
+                <!--lista usuarios-->
+                <ion-list id="list" *ngIf="ventana === 'ver_usuarios'">
+                    <ion-item *ngFor="let d of usuariosDB; let i = index">
+                        <ion-label>{{ i + 1 }}</ion-label>
+                        <ion-label>Nombre: {{d.name}}</ion-label>
+                        <ion-label>Nombre Usuario: {{ d.username }}</ion-label>
+                    </ion-item>
+                </ion-list>
+
+            </ion-col>
+
+            <ion-col *ngIf="list === 'true'" size="auto">
+                <ion-title id="experimentalT_ADMIN">ADMIN</ion-title>
+                <div id="experimental">
+                    <div *ngIf="ventana !== 'crear_usuario'"> <ion-button (click)="mostrarCrearUsuario()" class="experimentalB_ADMIN"><b>Crear usuario</b></ion-button> </div>    
+                    <div *ngIf="ventana !== 'registro'"> <ion-button (click)="mostrarregistro()" class="experimentalB_ADMIN"><b>cambiar Usuario</b></ion-button> </div>
+                    <div *ngIf="ventana !== 'ver_usuarios'"> <ion-button (click)="mostrarUsuarios()" class="experimentalB_ADMIN"><b>Ver Usuarios</b></ion-button> </div>
+                    <div *ngIf="ventana !== 'crear_manga'"> <ion-button (click)="mostrarCrearManga()" class="experimentalB_ADMIN"><b>Publicar manga</b></ion-button> </div>
+                    <div *ngIf="ventana !== ''"> <ion-button (click)="mostrarManga()" class="experimentalB_ADMIN"><b>lista Mangas</b></ion-button> </div>
+                    <div *ngIf="ventana !== 'mis_manga'"> <ion-button (click)="mostrarMisMangas()" class="experimentalB_ADMIN"><b>Mangas alquilados</b></ion-button> </div>    
+                </div>
+            </ion-col>
+
+        </ion-row>
+    </ion-grid>
 </ion-content>
 
 <ion-footer>
