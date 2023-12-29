@@ -57,6 +57,7 @@ export class HomePage {
     this.imageSrc = '';
   };
 
+  mostrarCarrito() { this.ventana = 'carrito', this.changeList(); }
   mostrarManga() { this.ventana = ''; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
   mostrarManga_ADMIN() { this.ventana = 'card_admin'; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
   mostrarregistro() { this.ventana = 'registro'; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
@@ -410,6 +411,7 @@ export class HomePage {
       this.presentAlert("Error al agragar al carro", "registrate primero.");
     }
     else{
+      this.presentAlert("Añadido al carro con exito", "");
       let fecha_actual = new Date();
       let year = fecha_actual.getFullYear();
       let month = (fecha_actual.getMonth() + 1).toString().padStart(2, '0');
@@ -420,19 +422,20 @@ export class HomePage {
       let fecha = `${year}-${month}-${day}`;
       let fecha_devolucion = `${year}-${month}-${dayBack}`;
 
-      let manga = [{
+      let manga = {
         fechaAlquiler: fecha,
         fechaLimite: fecha_devolucion,
         idMangaFK:{ idManga: info.idManga},
         idUserFK:{ idUsuario:this.idU }
-      }]
-      console.log('datos: \n'+manga[0].fechaAlquiler+'\n'+manga[0].fechaLimite+'\n'+manga[0].idMangaFK.idManga+'\n'+manga[0].idUserFK.idUsuario);
+      }
+      console.log('datos: \n'+manga.fechaAlquiler+'\n'+manga.fechaLimite+'\n'+manga.idMangaFK.idManga+'\n'+manga.idUserFK.idUsuario);
         
-      console.log('manga:\n'+ manga);
+      console.log('Array del carro: \n'+this.carro);
+      console.log(manga);
       this.carro.push(manga);
-      console.log(this.carro);
     }
-  }
+  };
+
   alquilarCarro(){
     /*metodo para alquilar el manga*/
     axios.post('http://localhost:8080/api/details/add', this.carro, { headers: 
@@ -447,6 +450,11 @@ export class HomePage {
       console.error('Error al intentar alquilar el manga:', error);
       this.presentAlert("Error al alquilar el manga", "Trabajamos para solucionarlo.");
     });
+  }
+
+  borrarCarro(i: number){
+    console.log(i);
+    this.carro.splice(i, 1); // Elimina 1 elemento en la posición i
   }
 
   /*aca esta la funcion para devolver manga*/

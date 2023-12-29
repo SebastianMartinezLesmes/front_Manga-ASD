@@ -34,8 +34,18 @@
 
             <!--contenido -->
             <ion-col id="content">
+<!-- aca esta la lista del carrito-->
+                <ion-list *ngIf="ventana === 'carrito'">
+                    <ion-item *ngFor="let car of carro; let i = index">
+                        <ion-label>{{i + 1}}</ion-label>
+                        <ion-label>ID Manga: {{car.idMangaFK.idManga}}</ion-label>
+                        <ion-label>ID Usuario: {{car.idUserFK.idUsuario}}</ion-label>
+                        <button (click)="borrarCarro(i)" class="experimentalB"><ion-icon name="trash"></ion-icon></button>
+                    </ion-item>                    
+                    <ion-button (click)="alquilarCarro()">alquilar todos</ion-button>
+                </ion-list>
 
-                <!--cartas de los mangas -->
+<!--cartas de los mangas -->
     
                 <ion-grid id="grid_card" *ngIf="ventana === ''">
                     <ion-row>
@@ -88,12 +98,16 @@
 
 <!-- lista con mis mangas -->
                 <ion-list id="list" *ngIf="ventana === 'mis_manga'">
-                    <ion-item *ngFor="let dev of gHistorialDetalle; let i = index">
-                        <ion-label>{{ i + 1 }}</ion-label>
-                        <ion-label>Titulo manga: {{ dev.idMangaFKName }}</ion-label>
-                        <ion-label>fecha devolucion: {{ dev.fechaLimite }}</ion-label>
-                        <ion-label>estado: {{dev.restore}}</ion-label>
-                    </ion-item>
+                    
+                    <div *ngFor="let dev of gHistorialDetalle; let i = index">
+                        <ion-item *ngIf="!dev.restore">
+                            <ion-label>{{ i + 1 }}</ion-label>
+                            <ion-label>Titulo manga: {{ dev.idMangaFKName }}</ion-label>
+                            <ion-label>fecha devolucion: {{ dev.fechaLimite }}</ion-label>
+                            <ion-label>estado: {{dev.restore}}</ion-label>
+                            <button id="button_misMangas" (click)="devolver(dev)">Devolver</button>
+                        </ion-item>
+                    </div>
                     <ion-card id="alquilalo" *ngIf="detallesDB.length === 0">
                         <ion-item lines="none">
                             <ion-label slot="start"> Aun no tienes mangas alquilados, alquila uno antes que se acaben </ion-label>
@@ -184,10 +198,11 @@
                 </div>
             </ion-col>
 
-            <!--menu lateral -->
+<!--menu lateral -->
             <ion-col *ngIf="list === 'true'" size="auto">
                 <div class="list-container">
                     <div id="experimental">
+                        <div *ngIf="ventana !== 'carrito'"><button (click)="mostrarCarrito()" class="experimentalB" *ngIf="cargo !== 'visitante'"><b>Mi Carrito</b></button></div>
                         <div *ngIf="ventana !== 'crear_usuario'"><button (click)="mostrarCrearUsuario()" class="experimentalB"><b>Crear usuario</b></button></div>
                         <div *ngIf="ventana !== 'registro'"><button (click)="mostrarregistro()" class="experimentalB" *ngIf="cargo === 'visitante'"><b>login</b></button></div>  
                         <div *ngIf="ventana !== 'registro'"><button (click)="mostrarregistro()" class="experimentalB" *ngIf="cargo !== 'visitante'"><b>Cambiar usuario</b></button></div>  
@@ -211,10 +226,10 @@
     <ion-grid>
 
         <ion-row>
-            <!-- contenido del cuerpo-->
+<!-- contenido del cuerpo Para Administrador-->
             <ion-col>
 
-                <!-- Formulario para crear mangas -->
+<!-- Formulario para crear mangas -->
                 <div id="espacio_publicarManga" *ngIf="ventana === 'crear_manga'">
                     <div id="titulo_publicarManga">
                         <p>Publicar un manga</p>
@@ -262,20 +277,21 @@
                     </div>
                 </div>
 
-                <!-- lista con mis mangas -->
+<!-- lista con mis mangas -->
                 <ion-list id="list" *ngIf="ventana === 'mis_manga'">
                     <ion-item *ngFor="let dev of detallesDB; let i = index">
                         <ion-label>{{ i + 1 }}</ion-label>
                         <ion-label>Titulo manga: {{ dev.idMangaFKName }}</ion-label>
-                        <ion-label>fecha devolucion: {{ dev.fecha_devolucion }}</ion-label>
-                        <ion-label>estado: {{dev.restore}}</ion-label>
+                        <ion-label>Alquilador: {{ dev.idUserFKName }}</ion-label>
+                        <ion-label *ngIf="!dev.restore">estado: Alquilado</ion-label>
+                        <ion-label *ngIf="dev.restore">estado: Devuelto</ion-label>
                     </ion-item>
                     <ion-card id="alquilalo" *ngIf="detallesDB.length === 0">
                         <h2>Los usuarios no han alquilado mangas por el momento, cuando lo hagan aca apareceran sus solicitudes</h2>
                     </ion-card>
                 </ion-list>
 
-                <!-- Formulario para crear usuarios -->
+<!-- Formulario para crear usuarios -->
                 <div id="espacio_crearUsuario" *ngIf="ventana === 'crear_usuario'">
                     <form id="formulario_crearUsuario" class="bg-dark p-5 rounded">
                         <div id="titulo_crearUsuario" class="mb-4 text-center">
@@ -398,11 +414,9 @@
                 <div id="list_Admin" *ngIf="ventana === 'ver_usuarios'">
                     <ion-list *ngFor="let d of usuariosDB">
                         <ion-item>
-                            <ion-row>
-                                <ion-col>{{d.idUsuario}}</ion-col>
-                                <ion-col>Nombre: {{d.name}}</ion-col>
-                                <ion-col>Nombre Usuario: {{ d.username }}</ion-col>
-                            </ion-row>
+                            <ion-label>{{d.idUsuario}}</ion-label>
+                            <ion-label>Nombre: {{d.name}}</ion-label>
+                            <ion-label>Nombre Usuario: {{ d.username }}</ion-label>
                         </ion-item>
                     </ion-list>
                 </div>
