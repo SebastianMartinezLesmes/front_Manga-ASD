@@ -57,7 +57,8 @@ export class HomePage {
     this.imageSrc = '';
   };
 
-  mostrarCarrito() { this.ventana = 'carrito', this.changeList(); }
+  
+  
   mostrarManga() { this.ventana = ''; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
   mostrarManga_ADMIN() { this.ventana = 'card_admin'; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
   mostrarregistro() { this.ventana = 'registro'; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
@@ -65,6 +66,13 @@ export class HomePage {
   mostrarUsuarios(){ this.ventana = 'ver_usuarios'; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
   mostrarCrearManga() { this.ventana = 'crear_manga'; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
   mostrarMisMangas() { this.ventana = 'mis_manga'; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
+
+  mostrarCarrito() { 
+    this.ventana = 'carrito';
+    if(this.carro.length === 0){
+      this.presentAlert("No tienes nada en el carro, alquila o añade mangas a tu carro antes de que se acaben", "");
+    };
+  }
 
   questInto() {
     if (this.cargo === '' || this.cargo === ' ') {
@@ -438,6 +446,7 @@ export class HomePage {
 
   alquilarCarro(){
     /*metodo para alquilar el manga*/
+    if(this.carro.length !== 0){
     axios.post('http://localhost:8080/api/details/add', this.carro, { headers: 
     { 'Content-Type': 'application/json' }}
     ).then(response => {
@@ -450,6 +459,8 @@ export class HomePage {
       console.error('Error al intentar alquilar el manga:', error);
       this.presentAlert("Error al alquilar el manga", "Trabajamos para solucionarlo.");
     });
+    }
+    else{ this.presentAlert("Error al alquilar los mangas", "no tienes nada en el carrito."); }
   }
 
   borrarCarro(i: number){

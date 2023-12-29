@@ -10,6 +10,7 @@
             <span class="navbar-toggler-icon"></span>
           </button>
         </div>
+        
       </nav>
     </ion-toolbar>
 </ion-header>
@@ -30,13 +31,16 @@
 <ion-content [fullscreen]="true" *ngIf="cargo !== 'administrador'">
 
     <ion-grid>
+        <ion-item *ngIf="ventana !== 'carrito'" id="window" lines="none">
+            <div slot="end"><button (click)="mostrarCarrito()" *ngIf="cargo !== 'visitante'"><ion-icon name="cart"></ion-icon></button></div>
+        </ion-item>
         <ion-row>
 
             <!--contenido -->
             <ion-col id="content">
 <!-- aca esta la lista del carrito-->
                 <ion-list *ngIf="ventana === 'carrito'">
-                    <ion-item *ngFor="let car of carro; let i = index">
+                    <ion-item *ngFor="let car of carro; let i = index" lines="none">
                         <ion-label>{{i + 1}}</ion-label>
                         <ion-label>ID Manga: {{car.idMangaFK.idManga}}</ion-label>
                         <ion-label>ID Usuario: {{car.idUserFK.idUsuario}}</ion-label>
@@ -202,8 +206,7 @@
             <ion-col *ngIf="list === 'true'" size="auto">
                 <div class="list-container">
                     <div id="experimental">
-                        <div *ngIf="ventana !== 'carrito'"><button (click)="mostrarCarrito()" class="experimentalB" *ngIf="cargo !== 'visitante'"><b>Mi Carrito</b></button></div>
-                        <div *ngIf="ventana !== 'crear_usuario'"><button (click)="mostrarCrearUsuario()" class="experimentalB"><b>Crear usuario</b></button></div>
+                        <div *ngIf="ventana !== 'crear_usuario'"><button (click)="mostrarCrearUsuario()" class="experimentalB" *ngIf="cargo === 'visitante'"><b>Crear usuario</b></button></div>
                         <div *ngIf="ventana !== 'registro'"><button (click)="mostrarregistro()" class="experimentalB" *ngIf="cargo === 'visitante'"><b>login</b></button></div>  
                         <div *ngIf="ventana !== 'registro'"><button (click)="mostrarregistro()" class="experimentalB" *ngIf="cargo !== 'visitante'"><b>Cambiar usuario</b></button></div>  
                         <div *ngIf="ventana !== ''"><button (click)="mostrarManga()" class="experimentalB"><b>lista Mangas</b></button></div>
