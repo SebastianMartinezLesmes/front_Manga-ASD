@@ -49,7 +49,7 @@
                     </ion-row>
                 </ion-grid>    
 
-                <!-- detalle de la carta-->
+<!-- detalle de la carta-->
                 <ion-grid id="detalle_card" *ngIf="ventana === 'Detalle_card'">
                     <ion-col *ngFor="let info of datsDetalle">
                         <ion-title>
@@ -86,12 +86,12 @@
                     </ion-col>
                 </ion-grid>   
 
-                <!-- lista con mis mangas -->
+<!-- lista con mis mangas -->
                 <ion-list id="list" *ngIf="ventana === 'mis_manga'">
-                    <ion-item *ngFor="let dev of detallesDB; let i = index">
+                    <ion-item *ngFor="let dev of gHistorialDetalle; let i = index">
                         <ion-label>{{ i + 1 }}</ion-label>
                         <ion-label>Titulo manga: {{ dev.idMangaFKName }}</ion-label>
-                        <ion-label>fecha devolucion: {{ dev.fecha_devolucion }}</ion-label>
+                        <ion-label>fecha devolucion: {{ dev.fechaLimite }}</ion-label>
                         <ion-label>estado: {{dev.restore}}</ion-label>
                     </ion-item>
                     <ion-card id="alquilalo" *ngIf="detallesDB.length === 0">
@@ -102,7 +102,7 @@
                     </ion-card>
                 </ion-list>    
 
-                <!-- Formulario para registrarse -->
+<!-- Formulario para registrarse -->
                 <div id="espacio_registro" *ngIf="ventana === 'registro'">
                     <form class="row g-3" id="form_registro" (ngSubmit)="login()">
                         <p id="titulo_registro"><b><i>Login</i></b></p>
@@ -123,7 +123,7 @@
                     </form>
                 </div>
 
-                <!-- Formulario para crear usuarios -->
+<!-- Formulario para crear usuarios -->
                 <div id="espacio_crearUsuario" *ngIf="ventana === 'crear_usuario'">
                     <form id="formulario_crearUsuario" class="bg-dark p-5 rounded">
                         <div id="titulo_crearUsuario" class="mb-4 text-center">
@@ -271,10 +271,7 @@
                         <ion-label>estado: {{dev.restore}}</ion-label>
                     </ion-item>
                     <ion-card id="alquilalo" *ngIf="detallesDB.length === 0">
-                        <ion-item lines="none">
-                            <ion-label slot="start"> Aun no tienes mangas alquilados, alquila uno antes que se acaben </ion-label>
-                        </ion-item>
-                        <img src="../../assets/senal.png" alt="imagen">
+                        <h2>Los usuarios no han alquilado mangas por el momento, cuando lo hagan aca apareceran sus solicitudes</h2>
                     </ion-card>
                 </ion-list>
 
@@ -338,7 +335,7 @@
                     </form>    
                 </div>   
 
-                <!-- Formulario para cambio de usuario -->
+<!-- Formulario para cambio de usuario -->
                 <div id="espacio_registro" *ngIf="ventana === 'registro'">
                     <form class="row g-3" id="form_registro" (ngSubmit)="login()">
                         <p id="titulo_registro"><b><i>Cambio de usuario</i></b></p>
@@ -359,8 +356,8 @@
                     </form>
                 </div>
 
-                <!--cartas de los mangas -->
-                <ion-grid id="grid_card" *ngIf="ventana === ''">
+<!--cartas de los mangas -->
+                <ion-grid id="grid_card" *ngIf="ventana === 'card_admin'">
                     <ion-row>
                         <ion-card id="card" *ngFor="let dat of mangasDB">
                             <div>
@@ -373,8 +370,8 @@
                     </ion-row>
                 </ion-grid> 
 
-                <!-- detalle de la carta-->
-                <ion-grid id="detalle_card" *ngIf="ventana === 'Detalle_card'">
+<!-- detalle de la carta-->
+                <ion-grid id="detalle_card" *ngIf="ventana === 'Detalle_card_admin'">
                     <ion-col *ngFor="let info of datsDetalle">
                         <ion-title>
                             <ion-icon name="arrow-back-outline" (click)="back()">Back</ion-icon>
@@ -397,7 +394,7 @@
                     </ion-col>
                 </ion-grid>   
 
-                <!--lista usuarios-->
+<!--lista usuarios-->
                 <div id="list_Admin" *ngIf="ventana === 'ver_usuarios'">
                     <ion-list *ngFor="let d of usuariosDB">
                         <ion-item>
@@ -419,7 +416,7 @@
                     <div *ngIf="ventana !== 'registro'"> <ion-button (click)="mostrarregistro()" class="experimentalB_ADMIN"><b>cambiar Usuario</b></ion-button> </div>
                     <div *ngIf="ventana !== 'ver_usuarios'"> <ion-button (click)="mostrarUsuarios()" class="experimentalB_ADMIN"><b>Ver Usuarios</b></ion-button> </div>
                     <div *ngIf="ventana !== 'crear_manga'"> <ion-button (click)="mostrarCrearManga()" class="experimentalB_ADMIN"><b>Publicar manga</b></ion-button> </div>
-                    <div *ngIf="ventana !== ''"> <ion-button (click)="mostrarManga()" class="experimentalB_ADMIN"><b>lista Mangas</b></ion-button> </div>
+                    <div> <ion-button (click)="mostrarManga_ADMIN()" class="experimentalB_ADMIN"><b>lista Mangas</b></ion-button> </div> <!-- ngIf="ventana !== 'Detalle_card_admin'" -->
                     <div *ngIf="ventana !== 'mis_manga'"> <ion-button (click)="mostrarMisMangas()" class="experimentalB_ADMIN"><b>Mangas alquilados</b></ion-button> </div>    
                 </div>
             </ion-col>

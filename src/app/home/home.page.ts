@@ -34,17 +34,6 @@ export class HomePage {
   password: string = '';
 
   ventana: string = '';
-  number: any = [
-    { id: 1, idMAngaFKName: 1, fecha_alquiler: 'fecha 1' },
-    { id: 2, idMAngaFKName: 2, fecha_alquiler: 'fecha 2' },
-    { id: 3, idMAngaFKName: 3, fecha_alquiler: 'fecha 3' },
-    { id: 4, idMAngaFKName: 4, fecha_alquiler: 'fecha 4' },
-    { id: 5, idMAngaFKName: 5, fecha_alquiler: 'fecha 5' },
-    { id: 6, idMAngaFKName: 6, fecha_alquiler: 'fecha 6' },
-    { id: 7, idMAngaFKName: 7, fecha_alquiler: 'fecha 7' },
-    { id: 8, idMAngaFKName: 8, fecha_alquiler: 'fecha 8' },
-    { id: 9, idMAngaFKName: 9, fecha_alquiler: 'fecha 9' },
-  ];
 
   title: string = '';
   description: string = '';
@@ -68,18 +57,37 @@ export class HomePage {
     this.imageSrc = '';
   };
 
-  mostrarManga() { this.ventana = ''; this.changeList(); }
-  mostrarregistro() { this.ventana = 'registro'; this.changeList(); }
-  mostrarCrearUsuario() { this.ventana = 'crear_usuario'; this.changeList(); }
-  mostrarUsuarios(){ this.ventana = 'ver_usuarios'; this.changeList();}
-  mostrarCrearManga() { this.ventana = 'crear_manga'; this.changeList(); }
-  mostrarMisMangas() { this.ventana = 'mis_manga'; this.changeList(); }
+  mostrarManga() { this.ventana = ''; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
+  mostrarManga_ADMIN() { this.ventana = 'card_admin'; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
+  mostrarregistro() { this.ventana = 'registro'; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
+  mostrarCrearUsuario() { this.ventana = 'crear_usuario'; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
+  mostrarUsuarios(){ this.ventana = 'ver_usuarios'; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
+  mostrarCrearManga() { this.ventana = 'crear_manga'; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
+  mostrarMisMangas() { this.ventana = 'mis_manga'; this.changeList(); this.datsDetalle.splice(0, this.datsDetalle.length);}
 
   questInto() {
     if (this.cargo === '' || this.cargo === ' ') {
       this.cargo = 'visitante';
     }
   }
+
+  changeList() {
+    if (this.list === 'true') {
+      this.list = 'false';
+    } else if (this.list === 'false') {
+      this.list = 'true';
+    }
+  };
+
+  async presentAlert(title: string, message: string) {
+    const alert = await this.alertController.create({
+      header: title,
+      message: message,
+      buttons: ['OK'],
+      mode: 'ios'
+    });
+    await alert.present();
+  };
 
   crearManga() {
     let camposVacios = '';
@@ -130,13 +138,12 @@ export class HomePage {
         this.presentAlert("Manga creado exitosamente", "");
         console.log('Respuesta del servidor:', response.data);
         this.limpiar();
+        this.getMangas();
       }).catch(error => {
         this.presentAlert("Error al crear el manga", "");
         console.error('Error al crear el manga,', error);
       });
-      this.getMangas();
     }
-    this.limpiar();
   };
 
   async crearUsuario() {
@@ -193,31 +200,15 @@ export class HomePage {
       axios.post('http://localhost:8080/api/users/add', user).then(response => {
         this.presentAlert("Usuario creado exitosamente", "");
         console.log('Respuesta del servidor:', response.data);
-        this.ventana = '';
+        this.getUser();
+        this.limpiar();
+        this.mostrarUsuarios();
       }).catch(error => {
         this.presentAlert("Error al crear el usuario", "");
         console.error('Error al enviar el ID al servidor:', error);
       });
     } 
-    this.limpiar();
   };
-
-  changeList() {
-    if (this.list === 'true') {
-      this.list = 'false';
-    } else if (this.list === 'false') {
-      this.list = 'true';
-    }
-  };
-  async presentAlert(title: string, message: string) {
-    const alert = await this.alertController.create({
-      header: title,
-      message: message,
-      buttons: ['OK'],
-      mode: 'ios'
-    });
-    await alert.present();
-  }
 
   /*proceso de login */
   login() {
@@ -259,12 +250,17 @@ export class HomePage {
           this.tokenKey = response.data[1];
           this.cargo = response.data[2];
 
-          this.ventana = '';
           this.getHistorialF();
 
-          if( this.cargo === 'administrador' ){ this.presentAlert("usuario registrado", "ahora puedes administrar la paguina"); this.getUser();}
-          else{ this.presentAlert("usuario registrado", "ahora puedes alquilar tu manga"); }
-
+          if( this.cargo === 'administrador' ){ 
+            this.mostrarManga_ADMIN();
+            this.presentAlert("usuario registrado", "ahora puedes administrar la paguina"); this.getUser();
+          }
+          else{ 
+            this.mostrarManga();
+            this.presentAlert("usuario registrado", "ahora puedes alquilar tu manga"); 
+          }
+          this.changeList();
           //requestHeaders
           console.log(this.requestHeaders);
           console.log('aca esta el token: ' + this.tokenKey);
@@ -310,12 +306,10 @@ export class HomePage {
   //aca recibe el token
   token: any = [];
   tokenKey: any = '';
-
   requestHeaders: HttpHeaders = new HttpHeaders({
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${this.tokenKey}`
   });
-
   requestHeadersM: HttpHeaders = new HttpHeaders({
     'Content-Type': 'multipart/form-data',
     'Authorization': `Bearer ${this.tokenKey}`
@@ -324,7 +318,6 @@ export class HomePage {
   //aca recibe los detalles del alquiler
   detallesDB: any = [];
   gHistorialDetalle: any = [];
-
   getHistorialF() {
     let headers = new HttpHeaders();
     headers = headers.set('Authorization', `Bearer ${this.tokenKey}`);
@@ -354,7 +347,7 @@ export class HomePage {
     )
   };
 
-  /*funcion para alquilar un manga*/
+/*funcion para alquilar un manga*/
   async alquilar(info: any) {
     const alert = await this.alertController.create({
       header: '¿Está seguro de que desea alquilar este manga?',
@@ -382,29 +375,28 @@ export class HomePage {
               let fecha = `${year}-${month}-${day}`;
               let fecha_devolucion = `${year}-${month}-${dayBack}`;
 
-              let manga = {
+              let manga = [{
                 fechaAlquiler: fecha,
-                fechaDevolucion: fecha_devolucion,
+                fechaLimite: fecha_devolucion,
                 idMangaFK:{ idManga: info.idManga},
                 idUserFK:{ idUsuario:this.idU }
-              }
-              console.log('datos: \n'+manga.fechaAlquiler+'\n'+manga.fechaDevolucion+'\n'+manga.idMangaFK.idManga+'\n'+manga.idUserFK.idUsuario);
+              }]
+              console.log('datos: \n'+manga[0].fechaAlquiler+'\n'+manga[0].fechaLimite+'\n'+manga[0].idMangaFK.idManga+'\n'+manga[0].idUserFK.idUsuario);
 
-              /*metodo para enviar el id del manga y del usuario*/
+/*metodo para alquilar el manga*/
               axios.post('http://localhost:8080/api/details/add', manga, { headers: 
-              { 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.tokenKey}`
-              }}
-              )
-              .then(response => {
+              { 'Content-Type': 'application/json' }}
+              ).then(response => {
                 console.log('Respuesta del servidor:', response.data);
                 this.presentAlert("Manga alquilado", "Disfruta de tu manga y no se te olvide devolverlo.");
+                this.getHistorialF();
+                this.getMangas();
               })
               .catch(error => {
                 console.error('Error al intentar alquilar el manga:', error);
                 this.presentAlert("Error al alquilar el manga", "Trabajamos para solucionarlo.");
               });
-            
+              this.getHistorialF();
               this.getMangas();
             }
           }
@@ -428,24 +420,33 @@ export class HomePage {
       let fecha = `${year}-${month}-${day}`;
       let fecha_devolucion = `${year}-${month}-${dayBack}`;
 
-      let manga = {
+      let manga = [{
         fechaAlquiler: fecha,
-        fechaDevolucion: fecha_devolucion,
+        fechaLimite: fecha_devolucion,
         idMangaFK:{ idManga: info.idManga},
         idUserFK:{ idUsuario:this.idU }
-      }
+      }]
+      console.log('datos: \n'+manga[0].fechaAlquiler+'\n'+manga[0].fechaLimite+'\n'+manga[0].idMangaFK.idManga+'\n'+manga[0].idUserFK.idUsuario);
         
-      const detalleObject = {
-        title: info.title,
-        description: info.description,
-        img: info.image,
-        price: info.price,
-        amount: info.amount
-      }
-      console.log('manga:\n'+ manga+'\ndetalle: \n'+detalleObject);
+      console.log('manga:\n'+ manga);
       this.carro.push(manga);
       console.log(this.carro);
     }
+  }
+  alquilarCarro(){
+    /*metodo para alquilar el manga*/
+    axios.post('http://localhost:8080/api/details/add', this.carro, { headers: 
+    { 'Content-Type': 'application/json' }}
+    ).then(response => {
+      console.log('Respuesta del servidor:', response.data);
+      this.presentAlert("Mangas alquilado", "Disfruta de tu manga y no se te olvide devolverlo.");
+      this.getHistorialF();
+      this.getMangas();
+    })
+    .catch(error => {
+      console.error('Error al intentar alquilar el manga:', error);
+      this.presentAlert("Error al alquilar el manga", "Trabajamos para solucionarlo.");
+    });
   }
 
   /*aca esta la funcion para devolver manga*/
@@ -470,7 +471,13 @@ export class HomePage {
 
   datsDetalle: any = [];
   detalle(dat:any){
-    this.ventana = 'Detalle_card';
+
+    if(this.cargo ==='administrador'){
+      this.ventana = 'Detalle_card_admin';
+    }
+    else{
+      this.ventana = 'Detalle_card';
+    }
 
     const detalleObject = {
       idManga : dat.idManga,
@@ -484,7 +491,13 @@ export class HomePage {
     this.datsDetalle.push(detalleObject);
   }
   back(){
+
+    if(this.cargo ==='administrador'){
+      this.ventana = 'card_admin';
+    }
+    else{
+      this.ventana = '';
+    }
     this.datsDetalle.splice(0, this.datsDetalle.length);
-    this.ventana = '';
   }
 }
